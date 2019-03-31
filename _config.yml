@@ -82,4 +82,3 @@ deploy:
   repo: 
     github: git@github.com:yunshang/yunshang.github.io.git
     coding: git@git.dev.tencent.com:alshin/alshin.git
-  branch: master
