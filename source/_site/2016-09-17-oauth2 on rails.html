@@ -1,0 +1,73 @@
+<blockquote>
+  <p>OAuth2是一个关于授权（authorization）的开放网络标准。</p>
+</blockquote>
+
+<h3 id="oauthrailsdevise-doorkeeper-and-omniauth-oauth2-gemsoauth">Oauth身份验证过程身份认证的服务平台,和一个客服端程序做为用户认证。Rails通常使用devise, doorkeeper and omniauth-oauth2 gems构建Oauth应用。</h3>
+
+<h2 id="the-server-application">The server application</h2>
+
+<h3 id="devise-gem-doorkeeper-gem-oauth2-server">Devise gem将会提供身份验证, doorkeeper gem 将允许应用做为一个Oauth2 server。</h3>
+
+<h3 id="devise-and-doorkeeper-gems-gemfile">添加 devise and doorkeeper gems 到Gemfile</h3>
+
+<div class="language-ruby highlighter-rouge"><pre class="highlight"><code><span class="n">gem</span> <span class="s2">"devise"</span>
+<span class="n">gem</span> <span class="s2">"doorkeeper"</span>
+</code></pre>
+</div>
+
+<h3 id="gem">生成这gem的引用和迁移文件。</h3>
+
+<div class="language-ruby highlighter-rouge"><pre class="highlight"><code><span class="n">rails</span> <span class="n">g</span> <span class="n">devise</span><span class="ss">:install</span>
+<span class="n">rails</span> <span class="n">g</span> <span class="n">devise</span> <span class="no">User</span>
+
+<span class="n">rails</span> <span class="n">g</span> <span class="n">doorkeeper</span><span class="ss">:install</span>
+<span class="n">rails</span> <span class="n">generate</span> <span class="n">doorkeeper</span><span class="ss">:migration</span>
+
+<span class="n">rake</span> <span class="n">db</span><span class="ss">:migrate</span>
+</code></pre>
+</div>
+
+<h3 id="doorkeeperrbdoorkeeperdevise">这过程会有很多文件生成,配置doorkeeper.rb文件,修改doorkeeper的初始化，让它使用devise作为认证。</h3>
+
+<div class="language-ruby highlighter-rouge"><pre class="highlight"><code><span class="n">resource_owner_authenticator</span> <span class="k">do</span>
+  <span class="n">current_user</span> <span class="o">||</span> <span class="k">begin</span>
+    <span class="n">session</span><span class="p">[</span><span class="ss">:user_return_to</span><span class="p">]</span> <span class="o">=</span> <span class="n">request</span><span class="p">.</span><span class="nf">fullpath</span>
+    <span class="n">redirect_to</span> <span class="n">new_user_session_url</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+
+<span class="n">admin_authenticator</span> <span class="k">do</span>
+  <span class="n">current_user</span> <span class="o">||</span> <span class="n">redirect_to</span><span class="p">(</span><span class="n">new_user_session_url</span><span class="p">)</span>
+<span class="k">end</span>
+</code></pre>
+</div>
+
+<h3 id="the-resourceownerauthenticator-devise-doorkeeperurlthe-adminauthenticator-bock-">The resource_owner_authenticator这代码块的意思:允许 devise 认证的用户可以访问doorkeeper的资源。假如用户没有通过认证,就存储url,跳转到登录页面。The admin_authenticator bock 做为访问用户限制。它用来管理客服端应用程序的所需令牌身份验证的限制。</h3>
+
+<h3 id="section">创建控制器，为客服端提供认证用户的信息。</h3>
+
+<div class="language-ruby highlighter-rouge"><pre class="highlight"><code><span class="k">class</span> <span class="nc">ApplicationController</span> <span class="o">&lt;</span> <span class="no">ActionController</span><span class="o">::</span><span class="no">Base</span>
+  <span class="n">before_action</span> <span class="ss">:doorkeeper_authorize!</span><span class="p">,</span> <span class="ss">only: :me</span>
+
+  <span class="k">def</span> <span class="nf">me</span>
+    <span class="n">render</span> <span class="ss">json: </span><span class="no">User</span><span class="p">.</span><span class="nf">find</span><span class="p">(</span><span class="n">doorkeeper_token</span><span class="p">.</span><span class="nf">resource_owner_id</span><span class="p">).</span><span class="nf">as_json</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre>
+</div>
+
+<h3 id="doorkeeperauthorize-oauth401-unauthorized">doorkeeper_authorize! 检测请求oauth的授权码是否正确,如果错误将渲染401 Unauthorized的请求头。</h3>
+
+<h3 id="section-1">不能忘记更新路由</h3>
+
+<div class="language-ruby highlighter-rouge"><pre class="highlight"><code><span class="no">Rails</span><span class="p">.</span><span class="nf">application</span><span class="p">.</span><span class="nf">routes</span><span class="p">.</span><span class="nf">draw</span> <span class="k">do</span>
+  <span class="n">use_doorkeeper</span>
+  <span class="n">devise_for</span> <span class="ss">:users</span>
+
+  <span class="n">get</span> <span class="s1">'/me'</span> <span class="o">=&gt;</span> <span class="s1">'application#me'</span>
+<span class="k">end</span>
+</code></pre>
+</div>
+
+<h3 id="server-applicationhttplocalhost3000oauthapplicationsnewclientidsecret">客服端应用需要被注册，在 server application平台上。访问http://localhost:3000/oauth/applications/new，注册新应用。你将会跳转到一个认证页面，按照规定要求填写信息后，将会被返回client_id,secret信息。</h3>
+

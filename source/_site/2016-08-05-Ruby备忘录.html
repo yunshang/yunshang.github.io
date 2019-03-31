@@ -1,0 +1,122 @@
+<h2 id="attraccessorcattraccessor">attr_accessor与cattr_accessor</h2>
+
+<blockquote>
+  <p>attr_accessor 和帮你在 Ruby 的类別里产生一对getter以及setter方法。</p>
+</blockquote>
+
+<div class="language-ruby highlighter-rouge"><pre class="highlight"><code><span class="k">class</span> <span class="nc">Person</span>
+  <span class="k">def</span> <span class="nf">name</span>
+    <span class="vi">@name</span> <span class="c1"># simply returning an instance variable @name</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+
+<span class="n">person</span> <span class="o">=</span> <span class="no">Person</span><span class="p">.</span><span class="nf">new</span>
+<span class="n">person</span><span class="p">.</span><span class="nf">name</span> <span class="c1"># =&gt; nil</span>
+<span class="n">person</span><span class="p">.</span><span class="nf">name</span> <span class="o">=</span> <span class="s2">"Dennis"</span> <span class="c1"># =&gt; no method error</span>
+</code></pre>
+</div>
+
+<h3 id="personname-personnamepersonnamedennispersonname">person.name 其实执行的是person.name()这个方法，person.name=”Dennis”是执行的是person.name=()这个方法。</h3>
+
+<div class="language-ruby highlighter-rouge"><pre class="highlight"><code><span class="k">class</span> <span class="nc">Person</span>
+  <span class="kp">attr_accessor</span> <span class="ss">:name</span>
+<span class="k">end</span>
+
+<span class="n">person</span> <span class="o">=</span> <span class="no">Person</span><span class="p">.</span><span class="nf">new</span>
+<span class="n">person</span><span class="p">.</span><span class="nf">name</span> <span class="o">=</span> <span class="s2">"Dennis"</span>
+<span class="n">person</span><span class="p">.</span><span class="nf">name</span> <span class="c1"># =&gt; "Dennis"</span>
+</code></pre>
+</div>
+
+<h3 id="attraccessor-personpersonnamepersonname">attr_accessor 给person加上了person.name这个读方法，和person.name=()这个写方法。</h3>
+
+<blockquote>
+  <p>cattr_accessor 类的共享实例</p>
+</blockquote>
+
+<div class="language-ruby highlighter-rouge"><pre class="highlight"><code><span class="k">class</span> <span class="nc">Counter</span>  
+  <span class="n">cattr_accessor</span> <span class="ss">:class_count</span>  
+  <span class="kp">attr_accessor</span> <span class="ss">:instance_count</span>  
+<span class="k">end</span>  
+   
+<span class="n">counter1</span> <span class="o">=</span> <span class="no">Counter</span><span class="p">.</span><span class="nf">new</span>  
+<span class="n">counter1</span><span class="p">.</span><span class="nf">instance_count</span> <span class="o">=</span> <span class="mi">1</span>  
+<span class="n">counter1</span><span class="p">.</span><span class="nf">class_count</span> <span class="o">=</span> <span class="mi">1</span>  
+   
+<span class="n">counter2</span> <span class="o">=</span> <span class="no">Counter</span><span class="p">.</span><span class="nf">new</span>  
+<span class="nb">p</span> <span class="n">counter2</span><span class="p">.</span><span class="nf">instance_count</span>  
+<span class="c1">#&gt; nil  </span>
+<span class="nb">p</span> <span class="n">counter2</span><span class="p">.</span><span class="nf">class_count</span>  
+<span class="c1">#&gt; 1  </span>
+</code></pre>
+</div>
+
+<h2 id="section">实例变量</h2>
+
+<blockquote>
+  <p>ruby的实例变量以@开头，是指实例化后的对象，才绑定的变量。实例变量属于特定的对象。</p>
+</blockquote>
+
+<div class="language-ruby highlighter-rouge"><pre class="highlight"><code><span class="k">class</span> <span class="nc">Myclass</span>
+  <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="nb">name</span><span class="p">,</span><span class="n">gender</span><span class="p">,</span><span class="n">age</span><span class="p">)</span>
+    <span class="vi">@name</span><span class="o">=</span><span class="nb">name</span>
+    <span class="vi">@gender</span><span class="o">=</span><span class="n">gender</span>
+    <span class="vi">@age</span><span class="o">=</span><span class="n">age</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre>
+</div>
+
+<h3 id="name-genderagenil">@name， @gender，@age都是实例变量。可以在类或子类的方法中引用实例变量。若引用尚未被初始化的实例变量的话，其值为nil。只有在类被实例化时，实例变量才产生和存在。但是，实例对象并不能直接访问实例变量。</h3>
+
+<h2 id="section-1">类变量</h2>
+
+<blockquote>
+  <p>类变量在类的定义中定义，可以在类的特殊方法、实例方法等处对类变量进行赋值和引用。类变量被类，类的子类和他们的实例对象共享。</p>
+</blockquote>
+
+<div class="language-ruby highlighter-rouge"><pre class="highlight"><code><span class="k">class</span> <span class="nc">Person</span>
+  <span class="vc">@@number</span> <span class="o">=</span> <span class="mi">0</span> <span class="c1">#使用前必须有初值</span>
+  <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="nb">name</span><span class="p">,</span> <span class="n">gender</span><span class="p">,</span> <span class="n">age</span><span class="p">)</span>
+    <span class="vi">@age</span> <span class="o">=</span> <span class="n">age</span>
+    <span class="vc">@@number</span> <span class="o">+=</span> <span class="mi">1</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre>
+</div>
+
+<h3 id="section-2">类变量是私有的，在类外无法直接访问，你只能通过实例方法和类方法去访问它。可以把类变量看作一种被类、子类以及它们的实例所共享的全局变量。模块中定义的类变量(模块变量)被所有包含该模块的类所共享。</h3>
+
+<div class="language-ruby highlighter-rouge"><pre class="highlight"><code>  <span class="k">class</span> <span class="nc">Parent</span>
+  <span class="k">end</span>
+
+  <span class="k">class</span> <span class="nc">Child</span> <span class="o">&lt;</span> <span class="no">Parent</span>
+    <span class="vc">@@var</span> <span class="o">=</span> <span class="s1">'var in Child'</span>
+    <span class="k">def</span> <span class="nc">self</span><span class="o">.</span><span class="nf">var</span>
+     <span class="vc">@@var</span> 
+    <span class="k">end</span>
+  <span class="k">end</span>
+
+  <span class="k">class</span> <span class="nc">AnotherChild</span> <span class="o">&lt;</span> <span class="no">Parent</span>
+    <span class="vc">@@var</span> <span class="o">=</span> <span class="s1">'var in AnotherChild'</span>
+    <span class="k">def</span> <span class="nc">self</span><span class="o">.</span><span class="nf">var</span>
+     <span class="vc">@@var</span> 
+    <span class="k">end</span>
+  <span class="k">end</span>
+  
+  <span class="nb">puts</span> <span class="no">Child</span><span class="p">.</span><span class="nf">var</span>  <span class="c1"># =&gt; var in Child</span>
+  <span class="nb">puts</span> <span class="no">AnotherChild</span><span class="p">.</span><span class="nf">var</span> <span class="c1"># =&gt; var in AnotherChild</span>
+
+  <span class="k">class</span> <span class="nc">Parent</span>
+    <span class="vc">@@var</span> <span class="o">=</span> <span class="s1">'var in Parent'</span>
+    <span class="k">def</span> <span class="nc">self</span><span class="o">.</span><span class="nf">var</span>
+     <span class="vc">@@var</span> 
+    <span class="k">end</span>
+  <span class="k">end</span>
+
+  <span class="nb">puts</span> <span class="no">Parent</span><span class="p">.</span><span class="nf">var</span> <span class="c1"># =&gt; var in Parent</span>
+  <span class="nb">puts</span> <span class="no">Child</span><span class="p">.</span><span class="nf">var</span> <span class="c1"># =&gt; var in Parent</span>
+  <span class="nb">puts</span> <span class="no">AnotherChild</span><span class="p">.</span><span class="nf">var</span> <span class="c1"># =&gt; var in Parent</span>
+</code></pre>
+</div>
+<p>### 如果父类中初始化了类变量的话，所有子类将共享同一个类变量，即使之前各子类都具有不同的类变量定义。</p>
