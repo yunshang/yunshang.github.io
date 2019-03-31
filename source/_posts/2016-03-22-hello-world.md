@@ -2,6 +2,7 @@
 layout: post
 title: 你好，世界
 category: 随笔
+lock: true
 tag: 
  - 思考
 date: 2016-03-22
