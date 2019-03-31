@@ -80,5 +80,5 @@ theme: ad
 deploy:
   type: git
   repo: 
-    github: git@github.com:yunshang/yunshang.github.io.git,gh-pages
+    github: git@github.com:yunshang/yunshang.github.io.git,master
     coding: git@git.dev.tencent.com:alshin/alshin.git,master
