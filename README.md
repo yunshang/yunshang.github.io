@@ -10,9 +10,9 @@ $ docker-compose down
 ## Hexo Web Preview
 [http://localhost:4000](http://localhost:4000)
 
+
 ## Hexo Web Admin
 [http://localhost:4000/admin](http://localhost:4000/admin)  
-See also https://github.com/vladpurga/hexo-admin-deploy-command
 
 ## Hexo Commands
 ```bash
