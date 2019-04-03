@@ -3,7 +3,7 @@
   <entry>
     <title><![CDATA[2019日常]]></title>
     <url>%2Fpassages%2F2019-02-20-2019%E6%97%A5%E5%B8%B8%2F</url>
-    <content type="text"><![CDATA[2018-02-20 抗拒自己的欲望，或者延迟满足欲望 质疑貌似最可信的言论，不盲从任何人 屏蔽流行信息，或者只在固定的时段接收流行信息 思考最不可能的事，为其发展出可能性 保留和发展自己的“怪癖”，并将其发展成自己的竞争力 为小事物狂热，并在小事物中发现大世界 开展思想实验和行动实验，让思想和行动相互激发 2019-03-14别人总问我为什么来这座城市，说出没结尾的故事没意义，只能苦笑说是梦的指引。 2019-03-15混乱无序的秩序，单方面可悲的勉强，低效的输入进展。是不到满身伤痕，是不会让我顿悟吗。 2019-03-16你所看到的,就是生活最合理的安排,不必忿忿不平,不用念念不忘,不需斤斤计较。 你想伸手说出舍不得走，它却高傲的抬起了头，生活你永远猜不透，如若相逢无须问侯，就像多年失散的朋友 但凡刻骨铭心，必定伤筋动骨。 2019-03-19邓宁·克鲁格效应说的是一种认知偏差现象，指的是能力欠缺的人在自己欠考虑的思考基础上得出错误结论，正如达尔文所说“无知比博学更容易带来自信。” 而当一个人开始学习新的知识，他原有的认知可能会被打破，这时候就陷入了绝望之谷。如果就此放弃，也可以在固有的思维和世界里打转，如果选择继续学习，将进入一个缓慢重新构建认知的过程，也就是开悟之坡，而这点滴知识与经验的累积会使你终将成为大师。 2019-04-02我选择坚持]]></content>
+    <content type="text"><![CDATA[2018-02-20 抗拒自己的欲望，或者延迟满足欲望 质疑貌似最可信的言论，不盲从任何人 屏蔽流行信息，或者只在固定的时段接收流行信息 思考最不可能的事，为其发展出可能性 保留和发展自己的“怪癖”，并将其发展成自己的竞争力 为小事物狂热，并在小事物中发现大世界 开展思想实验和行动实验，让思想和行动相互激发 2019-03-14别人总问我为什么来这座城市，说出没结尾的故事没意义，只能苦笑说是梦的指引。 2019-03-15混乱无序的秩序，单方面可悲的勉强，低效的输入进展。是不到满身伤痕，是不会让我顿悟吗。 2019-03-16你所看到的,就是生活最合理的安排,不必忿忿不平,不用念念不忘,不需斤斤计较。 你想伸手说出舍不得走，它却高傲的抬起了头，生活你永远猜不透，如若相逢无须问侯，就像多年失散的朋友 但凡刻骨铭心，必定伤筋动骨。 2019-03-19邓宁·克鲁格效应说的是一种认知偏差现象，指的是能力欠缺的人在自己欠考虑的思考基础上得出错误结论，正如达尔文所说“无知比博学更容易带来自信。” 而当一个人开始学习新的知识，他原有的认知可能会被打破，这时候就陷入了绝望之谷。如果就此放弃，也可以在固有的思维和世界里打转，如果选择继续学习，将进入一个缓慢重新构建认知的过程，也就是开悟之坡，而这点滴知识与经验的累积会使你终将成为大师。 2019-04-02我选择坚持 2019-04-03难过]]></content>
       <categories>
         <category>随笔</category>
       </categories>
@@ -232,17 +232,6 @@
       </tags>
   </entry>
   <entry>
-    <title><![CDATA[Oauth2 on Rails]]></title>
-    <url>%2Fpassages%2F2016-09-17-oauth2%20on%20rails%2F</url>
-    <content type="text"><![CDATA[OAuth2是一个关于授权（authorization）的开放网络标准。 Oauth身份验证过程身份认证的服务平台,和一个客服端程序做为用户认证。Rails通常使用devise, doorkeeper and omniauth-oauth2 gems构建Oauth应用。The server applicationDevise gem将会提供身份验证, doorkeeper gem 将允许应用做为一个Oauth2 server。添加 devise and doorkeeper gems 到Gemfilegem "devise" gem "doorkeeper" 生成这gem的引用和迁移文件。rails g devise:install rails g devise User rails g doorkeeper:install rails generate doorkeeper:migration rake db:migrate 这过程会有很多文件生成,配置doorkeeper.rb文件,修改doorkeeper的初始化，让它使用devise作为认证。resource_owner_authenticator do current_user || begin session[:user_return_to] = request.fullpath redirect_to new_user_session_url end end admin_authenticator do current_user || redirect_to(new_user_session_url) end The resource_owner_authenticator这代码块的意思:允许 devise 认证的用户可以访问doorkeeper的资源。假如用户没有通过认证,就存储url,跳转到登录页面。The admin_authenticator bock 做为访问用户限制。它用来管理客服端应用程序的所需令牌身份验证的限制。创建控制器，为客服端提供认证用户的信息。class ApplicationController &lt; ActionController::Base before_action :doorkeeper_authorize!, only: :me def me render json: User.find(doorkeeper_token.resource_owner_id).as_json end end doorkeeper_authorize! 检测请求oauth的授权码是否正确,如果错误将渲染401 Unauthorized的请求头。不能忘记更新路由Rails.application.routes.draw do use_doorkeeper devise_for :users get '/me' =&gt; 'application#me' end 客服端应用需要被注册，在 server application平台上。访问http://localhost:3000/oauth/applications/new，注册新应用。你将会跳转到一个认证页面，按照规定要求填写信息后，将会被返回client_id,secret信息。]]></content>
-      <categories>
-        <category>Ruby</category>
-      </categories>
-      <tags>
-        <tag>记录</tag>
-      </tags>
-  </entry>
-  <entry>
     <title><![CDATA[一个客服端应用]]></title>
     <url>%2Fpassages%2F2016-09-17-the%20client%20application%2F</url>
     <content type="text"><![CDATA[第一篇我们构建了Oauth 服务应用,现在我们创建一个发客服端应用。 omniauth-oauth2 gem,允许我们在试用Oauth2的时候，仅通过一个简单的配置文件(strategy)就可以办到。gem 'omniauth-oauth2' Omniauth 是一个通用gem,它允许程序员用它使用各种oath提供者，通过不同的配置。在lib下创建doorkeeper.rbrequire 'omniauth-oauth2' module OmniAuth module Strategies class Doorkeeper &lt; OmniAuth::Strategies::OAuth2 option :name, 'doorkeeper' option :client_options, { site: 'http://localhost:3000', authorize_url: 'http://localhost:3000/oauth/authorize' } uid { raw_info['id'] } info do { email: raw_info['email'], } end extra do { raw_info: raw_info } end def raw_info @raw_info ||= access_token.get('/me').parsed end end end end 再生成omniauth的配置文件touch config/initializers/omniauth.rb require 'doorkeeper' Rails.application.config.middleware.use OmniAuth::Builder do provider :doorkeeper, &lt;application_id&gt;, &lt;application_secret&gt; end application_id 和 application_secret 填入上一篇文章中得到的值。配置路由Rails.application.routes.draw do root to: redirect('/auth/doorkeeper') get '/auth/:provider/callback' =&gt; 'application#authentication_callback' end end 第一行doorkeeper的认证路由，将会被omniauth处理，第二行服务器的回调地址，将会有身份验证。class ApplicationController &lt; ActionController::Base auth = request.env['omniauth.auth'] render json: auth.to_json end end 参考资料 http://www.ruanyifeng.com/blog/2014/05/oauth_2_0.html https://ruby-china.org/topics/14656 http://linjunzhu.github.io/blog/2014/09/21/doorkeepershi-yong-jian-jie/]]></content>
@@ -251,6 +240,17 @@
       </categories>
       <tags>
         <tag>思考</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[Oauth2 on Rails]]></title>
+    <url>%2Fpassages%2F2016-09-17-oauth2%20on%20rails%2F</url>
+    <content type="text"><![CDATA[OAuth2是一个关于授权（authorization）的开放网络标准。 Oauth身份验证过程身份认证的服务平台,和一个客服端程序做为用户认证。Rails通常使用devise, doorkeeper and omniauth-oauth2 gems构建Oauth应用。The server applicationDevise gem将会提供身份验证, doorkeeper gem 将允许应用做为一个Oauth2 server。添加 devise and doorkeeper gems 到Gemfilegem "devise" gem "doorkeeper" 生成这gem的引用和迁移文件。rails g devise:install rails g devise User rails g doorkeeper:install rails generate doorkeeper:migration rake db:migrate 这过程会有很多文件生成,配置doorkeeper.rb文件,修改doorkeeper的初始化，让它使用devise作为认证。resource_owner_authenticator do current_user || begin session[:user_return_to] = request.fullpath redirect_to new_user_session_url end end admin_authenticator do current_user || redirect_to(new_user_session_url) end The resource_owner_authenticator这代码块的意思:允许 devise 认证的用户可以访问doorkeeper的资源。假如用户没有通过认证,就存储url,跳转到登录页面。The admin_authenticator bock 做为访问用户限制。它用来管理客服端应用程序的所需令牌身份验证的限制。创建控制器，为客服端提供认证用户的信息。class ApplicationController &lt; ActionController::Base before_action :doorkeeper_authorize!, only: :me def me render json: User.find(doorkeeper_token.resource_owner_id).as_json end end doorkeeper_authorize! 检测请求oauth的授权码是否正确,如果错误将渲染401 Unauthorized的请求头。不能忘记更新路由Rails.application.routes.draw do use_doorkeeper devise_for :users get '/me' =&gt; 'application#me' end 客服端应用需要被注册，在 server application平台上。访问http://localhost:3000/oauth/applications/new，注册新应用。你将会跳转到一个认证页面，按照规定要求填写信息后，将会被返回client_id,secret信息。]]></content>
+      <categories>
+        <category>Ruby</category>
+      </categories>
+      <tags>
+        <tag>记录</tag>
       </tags>
   </entry>
   <entry>
