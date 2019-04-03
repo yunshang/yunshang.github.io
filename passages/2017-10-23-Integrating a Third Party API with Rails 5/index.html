@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html>
+  
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="utf-8">
+  <meta name="author" content="alshin">
+  
+  
+  <title>【译】Rails 集成第三方 API | Hexo</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  
+    <meta name="keywords" content="翻译,翻译,">
+  
+
+  
+  <meta name="description" content="在搭建自己网站的时候，总会遇到集成第三方应用的时候，例如你不想自己收集数据，或者是要用到别人的服务。这文章将向您展示一个快速和简单的例子,如何使用API来填充应用程序用一些有用的数据。">
+
+  
+
+  
+    <script src="//cdn.jsdelivr.net/npm/leancloud-storage@3.11.1/dist/av-min.js" async></script>
+  
+
+  
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML" async></script>
+  
+
+  
+    <script src="//unpkg.com/valine/dist/Valine.min.js" async></script>
+  
+
+  
+
+  <script>
+  // theme-ad's config script
+  // it can be used in every script
+  
+  window.AD_CONFIG = {
+    leancloud: {"appid":"h0CqfjVcnAIMWz4RSInoU7nG-gzGzoHsz","appkey":"oMHPr4FFN8UsdSAjQ6aF0XYY","comment":true,"count":true},
+    welcome: {"enable":false,"interval":30},
+    start_time: "2019-04-03",
+    passwords: ["7c9682053bd95fa77364a9a794236619bc3576bdccc187458e4b9d16f1a1e681", ],
+    is_post: true,
+    lock: false,
+    author: "alshin",
+    share: {"twitter":false,"facebook":false,"weibo":false,"qq":false,"wechat":false},
+    mathjax: true,
+    page_type: "",
+    root: "/"
+  };
+</script>
+
+  <script src="/vendor/sha256.min.js"></script>
+<script src="/js/auth.js"></script>
+<script src="/js/index.js"></script>
+<script src="/vendor/qrcode.min.js"></script>
+
+  
+    <link rel="icon" href="/images/favicon.ico">
+    <link rel="apple-touch-icon" href="/images/touch-icon.png">
+  
+
+  <link href="//netdna.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+
+  <link rel="stylesheet" href="/css/index.css">
+<link rel="stylesheet" href="/styles/components/highlight/highlight.css">
+
+  
+</head>
+  <body>
+    <header class="site-header">
+  <div class="site-header-brand">
+    
+    
+  </div>
+  <div class="site-header-right">
+    <nav class="site-header-navigation">
+      
+        <a href="/" target="_self">首页</a>
+      
+        <a href="/archives/" target="_self">归档</a>
+      
+        <a href="/categories/" target="_self">分类</a>
+      
+    </nav>
+    <div class="site-header-btn">
+      
+        <a href="https://github.com/yunshang/" target="_blank" id="site-github">
+          <i class="fa fa-github-alt"></i>
+        </a>
+      
+      <a href="javascript:void(0);" id="site-nav-btn">
+        <i class="fa fa-ellipsis-v"></i>
+      </a>
+    </div>
+  </div>
+</header>
+<nav class="table-content" id="site-nav">
+  <div class="table-content-title">
+    <span>导航</span>
+  </div>
+  <div class="table-content-main">
+    <ol class="toc">
+      
+        <li class="toc-item">
+          <a href="/" target="_self">
+            首页
+          </a>
+        </li>
+      
+        <li class="toc-item">
+          <a href="/archives/" target="_self">
+            归档
+          </a>
+        </li>
+      
+        <li class="toc-item">
+          <a href="/categories/" target="_self">
+            分类
+          </a>
+        </li>
+      
+    </ol>
+  </div>
+</nav>
+<div id="site-process"></div>
+    <main>
+      
+  <div class="passage">
+  <div class="passage-meta">
+    <span>
+      <i class="fa fa-calendar"></i>2017-10-23
+    </span>
+    
+      <span>
+        | <a href="/categories/翻译/"><i class="fa fa-bookmark"></i>翻译</a>
+      </span>
+    
+    
+      <span>
+        | <i class="fa fa-unlock-alt"></i>UNLOCK
+      </span>
+    
+  </div>
+  <h1 class="passage-title">
+    【译】Rails 集成第三方 API
+  </h1>
+  
+  <article class="passage-article">
+    <p><img src="http://7te7uy.com1.z0.glb.clouddn.com/1-oVHo2zmRuVRN7BBp4HTD_A.jpeg" alt></p>
+<h2 id="构建-API-基础"><a href="#构建-API-基础" class="headerlink" title="构建 API 基础"></a>构建 API 基础</h2><p>我非常喜欢做菜，所以决定通过做一个菜谱 app。我将使用通过 Mashape 提供的 Spoonacular API。这是 API 文档 <a href="https://market.mashape.com/spoonacular/recipe-food-nutrition" target="_blank" rel="noopener">链接</a>, 构建 API 之前，我们需要申请一个 mashape 帐号，通过帐号生成 API token。</p>
+<p>我们先创建一个 Rails 项目，添加我们接下来需要到的 GEM，<a href="https://github.com/bkeepers/dotenv" target="_blank" rel="noopener">dotenv-rails</a>,能让我保存一些重要数据保存成环境变量，<a href="https://github.com/lostisland/faraday" target="_blank" rel="noopener">faraday</a>, 简单,灵活的 HTTP 客户端。</p>
+<figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">gem <span class="string">'dotenv-rails'</span></span><br><span class="line">gem <span class="string">'faraday'</span></span><br></pre></td></tr></table></figure>
+<p>新建两个类 Connection，Request，在 lib/spoonacular 文件夹下，这两个类是与第三方 API 建立连接，和请求用的。</p>
+<figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">require</span> <span class="string">'faraday'</span></span><br><span class="line"><span class="keyword">require</span> <span class="string">'json'</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Connection</span></span></span><br><span class="line">  BASE = <span class="string">'https://spoonacular-recipe-food-nutrition-v1.p.mashape.com'</span></span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">def</span> <span class="title">self</span>.<span class="title">api</span></span></span><br><span class="line">    Faraday.new(<span class="symbol">url:</span> BASE) <span class="keyword">do</span> <span class="params">|faraday|</span></span><br><span class="line">      faraday.response <span class="symbol">:logger</span></span><br><span class="line">      faraday.adapter Faraday.default_adapter</span><br><span class="line">      faraday.headers[<span class="string">'Content-Type'</span>] = <span class="string">'application/json'</span></span><br><span class="line">      faraday.headers[<span class="string">'X-Mashape-Key'</span>] = ENV[<span class="string">'MASHAPE_KEY'</span>]</span><br><span class="line">    <span class="keyword">end</span></span><br><span class="line">  <span class="keyword">end</span></span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure>
+<p>在 Connection 类里，定义了连接 API 的方法，和一些必须的配置文件。</p>
+<figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Request</span></span></span><br><span class="line">  <span class="class"><span class="keyword">class</span> &lt;&lt; self</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">where</span><span class="params">(resource_path, query = &#123;&#125;, options = &#123;&#125;)</span></span></span><br><span class="line">      response, status = get_json(resource_path, query)</span><br><span class="line">      status == <span class="number">200</span> ? response : errors(response)</span><br><span class="line">    <span class="keyword">end</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">get</span><span class="params">(id)</span></span></span><br><span class="line">      response, status = get_json(id)</span><br><span class="line">      status == <span class="number">200</span> ? response : errors(response)</span><br><span class="line">    <span class="keyword">end</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">errors</span><span class="params">(response)</span></span></span><br><span class="line">      error = &#123; <span class="symbol">errors:</span> &#123; <span class="symbol">status:</span> response[<span class="string">"status"</span>], <span class="symbol">message:</span> response[<span class="string">"message"</span>] &#125; &#125;</span><br><span class="line">      response.merge(error)</span><br><span class="line">    <span class="keyword">end</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">get_json</span><span class="params">(root_path, query = &#123;&#125;)</span></span></span><br><span class="line">      query_string = query.map&#123;<span class="params">|k,v|</span> <span class="string">"<span class="subst">#&#123;k&#125;</span>=<span class="subst">#&#123;v&#125;</span>"</span>&#125;.join(<span class="string">"&amp;"</span>)</span><br><span class="line">      path = query.empty?? root_path : <span class="string">"<span class="subst">#&#123;root_path&#125;</span>?<span class="subst">#&#123;query_string&#125;</span>"</span></span><br><span class="line">      response = api.get(path)</span><br><span class="line">      [JSON.parse(response.body), response.status]</span><br><span class="line">    <span class="keyword">end</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">api</span></span></span><br><span class="line">      Connection.api</span><br><span class="line">    <span class="keyword">end</span></span><br><span class="line">  <span class="keyword">end</span></span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure>
+<p>Request 类负责 Spoonacular API 的实际请求，还定义了一些辅佐方法。</p>
+<h2 id="数据处理"><a href="#数据处理" class="headerlink" title="数据处理"></a>数据处理</h2><p>现在我们需要向 Spoonacular API 发出请求, 通过它的文档，我们需要设计自己数据结构。这个 APP 只是想简单罗列出食谱，食谱有很多成分，和说明。<br>对于初学者，我们先创建一个 Spoonacular::Base 类，其中定义了错误属性和 initializaton method, 我建议把所有类放在 app/services/spoonacular 下。</p>
+<figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">module</span> <span class="title">Spoonacular</span></span></span><br><span class="line">  <span class="class"><span class="keyword">class</span> <span class="title">Base</span></span></span><br><span class="line">    <span class="keyword">attr_accessor</span> <span class="symbol">:errors</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">initialize</span><span class="params">(args = &#123;&#125;)</span></span></span><br><span class="line">      args.each <span class="keyword">do</span> <span class="params">|name, value|</span></span><br><span class="line">        attr_name = name.to_s.underscore</span><br><span class="line">        send(<span class="string">"<span class="subst">#&#123;attr_name&#125;</span>="</span>, value) <span class="keyword">if</span> respond_to?(<span class="string">"<span class="subst">#&#123;attr_name&#125;</span>="</span>)</span><br><span class="line">      <span class="keyword">end</span></span><br><span class="line">    <span class="keyword">end</span></span><br><span class="line">  <span class="keyword">end</span></span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure>
+<p>我们继续完善 Spoonacular API， 我们需要定义两条 routes, 一条是菜谱列表，另一个是菜谱详细信息。</p>
+<figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">GET recipes/random</span><br><span class="line">GET recipes/<span class="symbol">:id/information</span></span><br></pre></td></tr></table></figure>
+<p>正如你期望的，我们再创建 Spoonacular::Recipe 类，让它继承 Spoonacular::Base, 这个类有随机查找菜谱的的方法，我们还需要重新定义初始方法，以解析 HTTP 响应中的结构。</p>
+<figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">module</span> <span class="title">Spoonacular</span></span></span><br><span class="line">  <span class="class"><span class="keyword">class</span> <span class="title">Recipe</span> &lt; Base</span></span><br><span class="line">    <span class="keyword">attr_accessor</span> <span class="symbol">:aggregate_likes</span>,</span><br><span class="line">                  <span class="symbol">:dairy_free</span>,</span><br><span class="line">                  <span class="symbol">:gluten_free</span>,</span><br><span class="line">                  <span class="symbol">:id</span>,</span><br><span class="line">                  <span class="symbol">:image</span>,</span><br><span class="line">                  <span class="symbol">:ingredients</span>,</span><br><span class="line">                  <span class="symbol">:instructions</span>,</span><br><span class="line">                  <span class="symbol">:ready_in_minutes</span>,</span><br><span class="line">                  <span class="symbol">:title</span>,</span><br><span class="line">                  <span class="symbol">:vegan</span>,</span><br><span class="line">                  <span class="symbol">:vegetarian</span></span><br><span class="line"></span><br><span class="line">    MAX_LIMIT = <span class="number">12</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">self</span>.<span class="title">random</span><span class="params">(query = &#123;&#125;)</span></span></span><br><span class="line">      response = Request.where(<span class="string">'recipes/random'</span>, query.merge(&#123; <span class="symbol">number:</span> MAX_LIMIT &#125;))</span><br><span class="line">      recipes = response.fetch(<span class="string">'recipes'</span>, []).map &#123; <span class="params">|recipe|</span> Recipe.new(recipe) &#125;</span><br><span class="line">      [ recipes, response[<span class="symbol">:errors</span>] ]</span><br><span class="line">    <span class="keyword">end</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">self</span>.<span class="title">find</span><span class="params">(id)</span></span></span><br><span class="line">      response = Request.get(<span class="string">"recipes/<span class="subst">#&#123;id&#125;</span>/information"</span>)</span><br><span class="line">      Recipe.new(response)</span><br><span class="line">    <span class="keyword">end</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">initialize</span><span class="params">(args = &#123;&#125;)</span></span></span><br><span class="line">      <span class="keyword">super</span>(args)</span><br><span class="line">      <span class="keyword">self</span>.ingredients = parse_ingredients(args)</span><br><span class="line">      <span class="keyword">self</span>.instructions = parse_instructions(args)</span><br><span class="line">    <span class="keyword">end</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">parse_ingredients</span><span class="params">(args = &#123;&#125;)</span></span></span><br><span class="line">      args.fetch(<span class="string">"extendedIngredients"</span>, []).map &#123; <span class="params">|ingredient|</span> Ingredient.new(ingredient) &#125;</span><br><span class="line">    <span class="keyword">end</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">parse_instructions</span><span class="params">(args = &#123;&#125;)</span></span></span><br><span class="line">      instructions = args[<span class="string">"analyzedInstructions"</span>]</span><br><span class="line">      <span class="keyword">if</span> instructions</span><br><span class="line">        steps = instructions.first.fetch(<span class="string">"steps"</span>, [])</span><br><span class="line">        steps.map &#123; <span class="params">|instruction|</span> Instruction.new(instruction) &#125;</span><br><span class="line">      <span class="keyword">end</span></span><br><span class="line">    <span class="keyword">end</span></span><br><span class="line">  <span class="keyword">end</span></span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure>
+<p>返回来响应体中，包含了每个菜谱配方，都会创建一个 Spoonacular::Recipe 对象， 和几个 Spoonacular::Lngredient, Spoonacular::Instruction 对象。</p>
+<figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">module</span> <span class="title">Spoonacular</span></span></span><br><span class="line">  <span class="class"><span class="keyword">class</span> <span class="title">Ingredient</span> &lt; Base</span></span><br><span class="line">    <span class="keyword">attr_accessor</span> <span class="symbol">:id</span>,</span><br><span class="line">                  <span class="symbol">:image</span>,</span><br><span class="line">                  <span class="symbol">:name</span>,</span><br><span class="line">                  <span class="symbol">:amount</span>,</span><br><span class="line">                  <span class="symbol">:unit</span>,</span><br><span class="line">                  <span class="symbol">:original_string</span></span><br><span class="line">  <span class="keyword">end</span></span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">module</span> <span class="title">Spoonacular</span></span></span><br><span class="line">  <span class="class"><span class="keyword">class</span> <span class="title">Instruction</span> &lt; Base</span></span><br><span class="line">    <span class="keyword">attr_accessor</span> <span class="symbol">:number</span>, <span class="symbol">:step</span></span><br><span class="line">  <span class="keyword">end</span></span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure>
+<h2 id="最终构建应用"><a href="#最终构建应用" class="headerlink" title="最终构建应用"></a>最终构建应用</h2><p>我们搭建 WEB 界面。 如前所述，此界面将具有菜谱配方列表和菜谱配方详细信息。 因此，应该不难猜到我们需要为RecipesController 创建 index 和 show 页面：</p>
+<figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">RecipesController</span> &lt; ApplicationController</span></span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">def</span> <span class="title">index</span></span></span><br><span class="line">    @tag = query.fetch(<span class="symbol">:tags</span>, <span class="string">'all'</span>)</span><br><span class="line">    @recipes, @errors = Spoonacular::Recipe.random(query)</span><br><span class="line">  <span class="keyword">end</span></span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">def</span> <span class="title">show</span></span></span><br><span class="line">    @recipe = Spoonacular::Recipe.find(params[<span class="symbol">:id</span>])</span><br><span class="line">  <span class="keyword">end</span></span><br><span class="line"></span><br><span class="line">  private</span><br><span class="line">  <span class="function"><span class="keyword">def</span> <span class="title">query</span></span></span><br><span class="line">    params.fetch(<span class="symbol">:query</span>, &#123;&#125;)</span><br><span class="line">  <span class="keyword">end</span></span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure>
+<h3 id="原文"><a href="#原文" class="headerlink" title="原文"></a>原文</h3><ul>
+<li><a href="https://revs.runtime-revolution.com/integrating-a-third-party-api-with-rails-5-134f960ddbba" target="_blank" rel="noopener">https://revs.runtime-revolution.com/integrating-a-third-party-api-with-rails-5-134f960ddbba</a></li>
+</ul>
+  </article>
+  <aside class="table-content" id="site-toc">
+  <div class="table-content-title">
+    <i class="fa fa-arrow-right fa-lg" id="site-toc-hide-btn"></i>
+    <span>目录</span>
+  </div>
+  <div class="table-content-main">
+    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#构建-API-基础"><span class="toc-text">构建 API 基础</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#数据处理"><span class="toc-text">数据处理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#最终构建应用"><span class="toc-text">最终构建应用</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#原文"><span class="toc-text">原文</span></a></li></ol></li></ol>
+  </div>
+</aside>
+  
+    <aside class="passage-copyright">
+      <div>本文作者: 董沅鑫</div>
+      
+        <div>
+          原文链接: 
+          <a href target="_blank">http://blog.alshin.xyz/passages/2017-10-23-Integrating a Third Party API with Rails 5/</a>
+        </div>
+      
+      <div>
+        版权声明: 本博客所有文章除特别声明外, 均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> 许可协议. 转载请注明出处!
+      </div>
+    </aside>
+  
+  
+    <div class="passage-tags">
+     
+      <a href="/tags/翻译/"><i class="fa fa-tags"></i>翻译</a>
+    
+    </div>
+  
+</div>
+
+    </main>
+    
+      
+<div class="site-comment-contanier" data-plateform="leancloud">
+  
+    <p id="site-comment-info">
+      <i class="fa fa-spinner fa-spin"></i> 评论加载中
+    </p>
+    <div id="site-comment"></div>
+  
+</div>
+    
+    <div class="site-footer-wrapper">
+  <footer class="site-footer">
+    <div class="site-footer-info">
+      <i class="fa fa-clock-o"></i> 本站已稳定运行<span id="site-time"></span>
+    </div>
+    
+      <div class="site-footer-info">
+        <i class="fa fa-paw"></i> 您是本站第 <span id="site-count"></span> 位访客
+      </div>
+    
+    
+      <div class="site-footer-info">
+        <i class="fa fa-at"></i> Email: alshin@126.com
+      </div>
+    
+    <div class="site-footer-info">
+      <i class="fa fa-copyright"></i> 
+      2019 <a href="https://github.com/dongyuanxin/theme-ad/" target="_blank">Theme-AD</a>.
+      Created by <a href="https://godbmw.com/" target="_blank">GodBMW</a>.
+      All rights reserved.
+    </div>
+  </footer>
+</div>
+    <div id="site-layer" style="display:none;">
+  <div class="site-layer-content">
+    <div class="site-layer-header">
+      <span class="site-layer-header-title" id="site-layer-title"></span>
+      <i class="fa fa-close" id="site-layer-close"></i>
+    </div>
+    <div class="site-layer-body" id="site-layer-container">
+      <div class="site-layer-input" id="site-layer-search" style="display: none;">
+        <input type="text">
+        <i class="fa fa-search"></i>
+      </div>
+      <div class="site-layer-reward" id="site-layer-reward" style="display: none;">
+      </div>
+      <div id="site-layer-welcome" style="display:none;"></div>
+    </div>
+  </div>
+</div>
+    
+
+<div class="bottom-bar">
+  <div class="bottom-bar-left">
+    <a href="/passages/2017-12-3-Redis分享/" data-enable="true">
+      <i class="fa fa-arrow-left"></i>
+    </a>
+    <a href="/passages/2017-10-16-4 Problems of Web Development-from Developer's perspective/" data-enable="true">
+      <i class="fa fa-arrow-right"></i>
+    </a>
+  </div>
+  <div class="bottom-bar-right">
+    <a href="javascript:void(0);" data-enable="true" id="site-toc-show-btn">
+      <i class="fa fa-bars"></i>
+    </a>
+    
+      <a href="#site-comment" data-enable="true">
+        <i class="fa fa-commenting"></i>
+      </a>
+    
+    <a href="javascript:void(0);" id="site-toggle-share-btn">
+      <i class="fa fa-share-alt"></i>
+    </a>
+    <a href="javascript:void(0);" id="site-reward">
+      <i class="fa fa-thumbs-up"></i>
+    </a>
+    <a href="javascript:void(0);" id="back-top-btn">
+      <i class="fa fa-chevron-up"></i>
+    </a>
+  </div>
+</div>
+    <div id="share-btn">
+  
+  
+  
+  
+  
+</div>
+    
+
+
+
+
+
+    
+  </body>
+</html>

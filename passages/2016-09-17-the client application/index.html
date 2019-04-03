@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html>
+  
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="utf-8">
+  <meta name="author" content="alshin">
+  
+  
+  <title>一个客服端应用 | Hexo</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  
+    <meta name="keywords" content="Ruby,思考,">
+  
+
+  
+  <meta name="description" content="第一篇我们构建了Oauth 服务应用,现在我们创建一个发客服端应用。">
+
+  
+
+  
+    <script src="//cdn.jsdelivr.net/npm/leancloud-storage@3.11.1/dist/av-min.js" async></script>
+  
+
+  
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML" async></script>
+  
+
+  
+    <script src="//unpkg.com/valine/dist/Valine.min.js" async></script>
+  
+
+  
+
+  <script>
+  // theme-ad's config script
+  // it can be used in every script
+  
+  window.AD_CONFIG = {
+    leancloud: {"appid":"h0CqfjVcnAIMWz4RSInoU7nG-gzGzoHsz","appkey":"oMHPr4FFN8UsdSAjQ6aF0XYY","comment":true,"count":true},
+    welcome: {"enable":false,"interval":30},
+    start_time: "2019-04-03",
+    passwords: ["7c9682053bd95fa77364a9a794236619bc3576bdccc187458e4b9d16f1a1e681", ],
+    is_post: true,
+    lock: false,
+    author: "alshin",
+    share: {"twitter":false,"facebook":false,"weibo":false,"qq":false,"wechat":false},
+    mathjax: true,
+    page_type: "",
+    root: "/"
+  };
+</script>
+
+  <script src="/vendor/sha256.min.js"></script>
+<script src="/js/auth.js"></script>
+<script src="/js/index.js"></script>
+<script src="/vendor/qrcode.min.js"></script>
+
+  
+    <link rel="icon" href="/images/favicon.ico">
+    <link rel="apple-touch-icon" href="/images/touch-icon.png">
+  
+
+  <link href="//netdna.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+
+  <link rel="stylesheet" href="/css/index.css">
+<link rel="stylesheet" href="/styles/components/highlight/highlight.css">
+
+  
+</head>
+  <body>
+    <header class="site-header">
+  <div class="site-header-brand">
+    
+    
+  </div>
+  <div class="site-header-right">
+    <nav class="site-header-navigation">
+      
+        <a href="/" target="_self">首页</a>
+      
+        <a href="/archives/" target="_self">归档</a>
+      
+        <a href="/categories/" target="_self">分类</a>
+      
+    </nav>
+    <div class="site-header-btn">
+      
+        <a href="https://github.com/yunshang/" target="_blank" id="site-github">
+          <i class="fa fa-github-alt"></i>
+        </a>
+      
+      <a href="javascript:void(0);" id="site-nav-btn">
+        <i class="fa fa-ellipsis-v"></i>
+      </a>
+    </div>
+  </div>
+</header>
+<nav class="table-content" id="site-nav">
+  <div class="table-content-title">
+    <span>导航</span>
+  </div>
+  <div class="table-content-main">
+    <ol class="toc">
+      
+        <li class="toc-item">
+          <a href="/" target="_self">
+            首页
+          </a>
+        </li>
+      
+        <li class="toc-item">
+          <a href="/archives/" target="_self">
+            归档
+          </a>
+        </li>
+      
+        <li class="toc-item">
+          <a href="/categories/" target="_self">
+            分类
+          </a>
+        </li>
+      
+    </ol>
+  </div>
+</nav>
+<div id="site-process"></div>
+    <main>
+      
+  <div class="passage">
+  <div class="passage-meta">
+    <span>
+      <i class="fa fa-calendar"></i>2016-09-17
+    </span>
+    
+      <span>
+        | <a href="/categories/Ruby/"><i class="fa fa-bookmark"></i>Ruby</a>
+      </span>
+    
+    
+      <span>
+        | <i class="fa fa-unlock-alt"></i>UNLOCK
+      </span>
+    
+  </div>
+  <h1 class="passage-title">
+    一个客服端应用
+  </h1>
+  
+  <article class="passage-article">
+    <h3 id="omniauth-oauth2-gem-允许我们在试用Oauth2的时候，仅通过一个简单的配置文件-strategy-就可以办到。"><a href="#omniauth-oauth2-gem-允许我们在试用Oauth2的时候，仅通过一个简单的配置文件-strategy-就可以办到。" class="headerlink" title="omniauth-oauth2 gem,允许我们在试用Oauth2的时候，仅通过一个简单的配置文件(strategy)就可以办到。"></a>omniauth-oauth2 gem,允许我们在试用Oauth2的时候，仅通过一个简单的配置文件(strategy)就可以办到。</h3><pre><code class="ruby">gem <span class="string">'omniauth-oauth2'</span>
+</code></pre>
+<h3 id="Omniauth-是一个通用gem-它允许程序员用它使用各种oath提供者，通过不同的配置。"><a href="#Omniauth-是一个通用gem-它允许程序员用它使用各种oath提供者，通过不同的配置。" class="headerlink" title="Omniauth 是一个通用gem,它允许程序员用它使用各种oath提供者，通过不同的配置。"></a>Omniauth 是一个通用gem,它允许程序员用它使用各种oath提供者，通过不同的配置。</h3><h3 id="在lib下创建doorkeeper-rb"><a href="#在lib下创建doorkeeper-rb" class="headerlink" title="在lib下创建doorkeeper.rb"></a>在lib下创建doorkeeper.rb</h3><pre><code class="ruby"><span class="keyword">require</span> <span class="string">'omniauth-oauth2'</span>
+
+<span class="class"><span class="keyword">module</span> <span class="title">OmniAuth</span></span>
+  <span class="class"><span class="keyword">module</span> <span class="title">Strategies</span></span>
+    <span class="class"><span class="keyword">class</span> <span class="title">Doorkeeper</span> &lt; OmniAuth::Strategies::<span class="title">OAuth2</span></span>
+      option <span class="symbol">:name</span>, <span class="string">'doorkeeper'</span>
+      option <span class="symbol">:client_options</span>, {
+        <span class="symbol">site:</span>          <span class="string">'http://localhost:3000'</span>,
+        <span class="symbol">authorize_url:</span> <span class="string">'http://localhost:3000/oauth/authorize'</span>
+      }
+
+      uid {
+        raw_info[<span class="string">'id'</span>]
+      }
+
+      info <span class="keyword">do</span>
+        {
+          <span class="symbol">email:</span> raw_info[<span class="string">'email'</span>],
+        }
+      <span class="keyword">end</span>
+
+      extra <span class="keyword">do</span>
+        { <span class="symbol">raw_info:</span> raw_info }
+      <span class="keyword">end</span>
+
+      <span class="function"><span class="keyword">def</span> <span class="title">raw_info</span></span>
+        @raw_info <span class="params">||</span>= access_token.get(<span class="string">'/me'</span>).parsed
+      <span class="keyword">end</span>
+    <span class="keyword">end</span>
+  <span class="keyword">end</span>
+<span class="keyword">end</span>
+</code></pre>
+<h3 id="再生成omniauth的配置文件"><a href="#再生成omniauth的配置文件" class="headerlink" title="再生成omniauth的配置文件"></a>再生成omniauth的配置文件</h3><pre><code class="ruby">touch config/initializers/omniauth.rb
+</code></pre>
+<pre><code class="ruby"><span class="keyword">require</span> <span class="string">'doorkeeper'</span>
+
+Rails.application.config.middleware.use OmniAuth::Builder <span class="keyword">do</span>
+  provider <span class="symbol">:doorkeeper</span>, &lt;application_id&gt;, &lt;application_secret&gt;
+<span class="keyword">end</span>
+</code></pre>
+<h3 id="application-id-和-application-secret-填入上一篇文章中得到的值。"><a href="#application-id-和-application-secret-填入上一篇文章中得到的值。" class="headerlink" title="application_id 和 application_secret 填入上一篇文章中得到的值。"></a>application_id 和 application_secret 填入上一篇文章中得到的值。</h3><h3 id="配置路由"><a href="#配置路由" class="headerlink" title="配置路由"></a>配置路由</h3><pre><code class="ruby">Rails.application.routes.draw <span class="keyword">do</span>
+  root <span class="symbol">to:</span> redirect(<span class="string">'/auth/doorkeeper'</span>)
+
+    get <span class="string">'/auth/:provider/callback'</span> =&gt; <span class="string">'application#authentication_callback'</span>
+    <span class="keyword">end</span>
+  <span class="keyword">end</span>
+</code></pre>
+<h3 id="第一行doorkeeper的认证路由，将会被omniauth处理，第二行服务器的回调地址，将会有身份验证。"><a href="#第一行doorkeeper的认证路由，将会被omniauth处理，第二行服务器的回调地址，将会有身份验证。" class="headerlink" title="第一行doorkeeper的认证路由，将会被omniauth处理，第二行服务器的回调地址，将会有身份验证。"></a>第一行doorkeeper的认证路由，将会被omniauth处理，第二行服务器的回调地址，将会有身份验证。</h3><pre><code class="ruby"><span class="class"><span class="keyword">class</span> <span class="title">ApplicationController</span> &lt; ActionController::Base</span>
+  auth = request.env[<span class="string">'omniauth.auth'</span>]
+    render <span class="symbol">json:</span> auth.to_json
+    <span class="keyword">end</span>
+  <span class="keyword">end</span>
+</code></pre>
+<h3 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h3><ul>
+<li><p><a href="http://www.ruanyifeng.com/blog/2014/05/oauth_2_0.html" target="_blank" rel="noopener">http://www.ruanyifeng.com/blog/2014/05/oauth_2_0.html</a></p>
+</li>
+<li><p><a href="https://ruby-china.org/topics/14656" target="_blank" rel="noopener">https://ruby-china.org/topics/14656</a></p>
+</li>
+<li><p><a href="http://linjunzhu.github.io/blog/2014/09/21/doorkeepershi-yong-jian-jie/" target="_blank" rel="noopener">http://linjunzhu.github.io/blog/2014/09/21/doorkeepershi-yong-jian-jie/</a></p>
+</li>
+</ul>
+  </article>
+  <aside class="table-content" id="site-toc">
+  <div class="table-content-title">
+    <i class="fa fa-arrow-right fa-lg" id="site-toc-hide-btn"></i>
+    <span>目录</span>
+  </div>
+  <div class="table-content-main">
+    <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#omniauth-oauth2-gem-允许我们在试用Oauth2的时候，仅通过一个简单的配置文件-strategy-就可以办到。"><span class="toc-text">omniauth-oauth2 gem,允许我们在试用Oauth2的时候，仅通过一个简单的配置文件(strategy)就可以办到。</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Omniauth-是一个通用gem-它允许程序员用它使用各种oath提供者，通过不同的配置。"><span class="toc-text">Omniauth 是一个通用gem,它允许程序员用它使用各种oath提供者，通过不同的配置。</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#在lib下创建doorkeeper-rb"><span class="toc-text">在lib下创建doorkeeper.rb</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#再生成omniauth的配置文件"><span class="toc-text">再生成omniauth的配置文件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#application-id-和-application-secret-填入上一篇文章中得到的值。"><span class="toc-text">application_id 和 application_secret 填入上一篇文章中得到的值。</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#配置路由"><span class="toc-text">配置路由</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#第一行doorkeeper的认证路由，将会被omniauth处理，第二行服务器的回调地址，将会有身份验证。"><span class="toc-text">第一行doorkeeper的认证路由，将会被omniauth处理，第二行服务器的回调地址，将会有身份验证。</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#参考资料"><span class="toc-text">参考资料</span></a></li></ol>
+  </div>
+</aside>
+  
+    <aside class="passage-copyright">
+      <div>本文作者: 董沅鑫</div>
+      
+        <div>
+          原文链接: 
+          <a href target="_blank">http://blog.alshin.xyz/passages/2016-09-17-the client application/</a>
+        </div>
+      
+      <div>
+        版权声明: 本博客所有文章除特别声明外, 均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> 许可协议. 转载请注明出处!
+      </div>
+    </aside>
+  
+  
+    <div class="passage-tags">
+     
+      <a href="/tags/思考/"><i class="fa fa-tags"></i>思考</a>
+    
+    </div>
+  
+</div>
+
+    </main>
+    
+      
+<div class="site-comment-contanier" data-plateform="leancloud">
+  
+    <p id="site-comment-info">
+      <i class="fa fa-spinner fa-spin"></i> 评论加载中
+    </p>
+    <div id="site-comment"></div>
+  
+</div>
+    
+    <div class="site-footer-wrapper">
+  <footer class="site-footer">
+    <div class="site-footer-info">
+      <i class="fa fa-clock-o"></i> 本站已稳定运行<span id="site-time"></span>
+    </div>
+    
+      <div class="site-footer-info">
+        <i class="fa fa-paw"></i> 您是本站第 <span id="site-count"></span> 位访客
+      </div>
+    
+    
+      <div class="site-footer-info">
+        <i class="fa fa-at"></i> Email: alshin@126.com
+      </div>
+    
+    <div class="site-footer-info">
+      <i class="fa fa-copyright"></i> 
+      2019 <a href="https://github.com/dongyuanxin/theme-ad/" target="_blank">Theme-AD</a>.
+      Created by <a href="https://godbmw.com/" target="_blank">GodBMW</a>.
+      All rights reserved.
+    </div>
+  </footer>
+</div>
+    <div id="site-layer" style="display:none;">
+  <div class="site-layer-content">
+    <div class="site-layer-header">
+      <span class="site-layer-header-title" id="site-layer-title"></span>
+      <i class="fa fa-close" id="site-layer-close"></i>
+    </div>
+    <div class="site-layer-body" id="site-layer-container">
+      <div class="site-layer-input" id="site-layer-search" style="display: none;">
+        <input type="text">
+        <i class="fa fa-search"></i>
+      </div>
+      <div class="site-layer-reward" id="site-layer-reward" style="display: none;">
+      </div>
+      <div id="site-layer-welcome" style="display:none;"></div>
+    </div>
+  </div>
+</div>
+    
+
+<div class="bottom-bar">
+  <div class="bottom-bar-left">
+    <a href="/passages/2016-09-17-oauth2 on rails/" data-enable="true">
+      <i class="fa fa-arrow-left"></i>
+    </a>
+    <a href="/passages/2016-09-13-Rails笔记/" data-enable="true">
+      <i class="fa fa-arrow-right"></i>
+    </a>
+  </div>
+  <div class="bottom-bar-right">
+    <a href="javascript:void(0);" data-enable="true" id="site-toc-show-btn">
+      <i class="fa fa-bars"></i>
+    </a>
+    
+      <a href="#site-comment" data-enable="true">
+        <i class="fa fa-commenting"></i>
+      </a>
+    
+    <a href="javascript:void(0);" id="site-toggle-share-btn">
+      <i class="fa fa-share-alt"></i>
+    </a>
+    <a href="javascript:void(0);" id="site-reward">
+      <i class="fa fa-thumbs-up"></i>
+    </a>
+    <a href="javascript:void(0);" id="back-top-btn">
+      <i class="fa fa-chevron-up"></i>
+    </a>
+  </div>
+</div>
+    <div id="share-btn">
+  
+  
+  
+  
+  
+</div>
+    
+
+
+
+
+
+    
+  </body>
+</html>

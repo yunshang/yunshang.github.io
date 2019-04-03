@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html>
+  
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="utf-8">
+  <meta name="author" content="alshin">
+  
+  
+  <title>【译】4 Problems of Web Development-from Developer&#39;s perspective | Hexo</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  
+    <meta name="keywords" content="翻译,翻译,">
+  
+
+  
+  <meta name="description" content="我们总会在重复的任务中感到无聊。当前的技术或许已经过时，或者缺乏创新。但我们仍需要选择更合适的开发工具，用更聪明的方法，浏览器还是在首要地位。">
+
+  
+
+  
+    <script src="//cdn.jsdelivr.net/npm/leancloud-storage@3.11.1/dist/av-min.js" async></script>
+  
+
+  
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML" async></script>
+  
+
+  
+    <script src="//unpkg.com/valine/dist/Valine.min.js" async></script>
+  
+
+  
+
+  <script>
+  // theme-ad's config script
+  // it can be used in every script
+  
+  window.AD_CONFIG = {
+    leancloud: {"appid":"h0CqfjVcnAIMWz4RSInoU7nG-gzGzoHsz","appkey":"oMHPr4FFN8UsdSAjQ6aF0XYY","comment":true,"count":true},
+    welcome: {"enable":false,"interval":30},
+    start_time: "2019-04-03",
+    passwords: ["7c9682053bd95fa77364a9a794236619bc3576bdccc187458e4b9d16f1a1e681", ],
+    is_post: true,
+    lock: false,
+    author: "alshin",
+    share: {"twitter":false,"facebook":false,"weibo":false,"qq":false,"wechat":false},
+    mathjax: true,
+    page_type: "",
+    root: "/"
+  };
+</script>
+
+  <script src="/vendor/sha256.min.js"></script>
+<script src="/js/auth.js"></script>
+<script src="/js/index.js"></script>
+<script src="/vendor/qrcode.min.js"></script>
+
+  
+    <link rel="icon" href="/images/favicon.ico">
+    <link rel="apple-touch-icon" href="/images/touch-icon.png">
+  
+
+  <link href="//netdna.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+
+  <link rel="stylesheet" href="/css/index.css">
+<link rel="stylesheet" href="/styles/components/highlight/highlight.css">
+
+  
+</head>
+  <body>
+    <header class="site-header">
+  <div class="site-header-brand">
+    
+    
+  </div>
+  <div class="site-header-right">
+    <nav class="site-header-navigation">
+      
+        <a href="/" target="_self">首页</a>
+      
+        <a href="/archives/" target="_self">归档</a>
+      
+        <a href="/categories/" target="_self">分类</a>
+      
+    </nav>
+    <div class="site-header-btn">
+      
+        <a href="https://github.com/yunshang/" target="_blank" id="site-github">
+          <i class="fa fa-github-alt"></i>
+        </a>
+      
+      <a href="javascript:void(0);" id="site-nav-btn">
+        <i class="fa fa-ellipsis-v"></i>
+      </a>
+    </div>
+  </div>
+</header>
+<nav class="table-content" id="site-nav">
+  <div class="table-content-title">
+    <span>导航</span>
+  </div>
+  <div class="table-content-main">
+    <ol class="toc">
+      
+        <li class="toc-item">
+          <a href="/" target="_self">
+            首页
+          </a>
+        </li>
+      
+        <li class="toc-item">
+          <a href="/archives/" target="_self">
+            归档
+          </a>
+        </li>
+      
+        <li class="toc-item">
+          <a href="/categories/" target="_self">
+            分类
+          </a>
+        </li>
+      
+    </ol>
+  </div>
+</nav>
+<div id="site-process"></div>
+    <main>
+      
+  <div class="passage">
+  <div class="passage-meta">
+    <span>
+      <i class="fa fa-calendar"></i>2017-10-16
+    </span>
+    
+      <span>
+        | <a href="/categories/翻译/"><i class="fa fa-bookmark"></i>翻译</a>
+      </span>
+    
+    
+      <span>
+        | <i class="fa fa-unlock-alt"></i>UNLOCK
+      </span>
+    
+  </div>
+  <h1 class="passage-title">
+    【译】4 Problems of Web Development-from Developer's perspective
+  </h1>
+  
+  <article class="passage-article">
+    <h1 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h1><p>当 web 开发者每天坐在电脑前，缓慢得在 Darcula 主题的文本编辑器上输入代码的时候，显示器的亮光并不会给我们如何构建网站带来灵光。</p>
+<h3 id="1-厌倦"><a href="#1-厌倦" class="headerlink" title="1 厌倦"></a>1 厌倦</h3><p>Web 开发者职业初期可能都是 form,grid,modal dialog 这些基础的东西，当新的热门技术来，你可能用它又构建之前相同的东西，虽然技术是不同，但实质上没什么改变。</p>
+<p><img src="http://7te7uy.com1.z0.glb.clouddn.com/1-4luOcmV31e68HSGkxoXdMw.png" alt></p>
+<p>这问题是我们感到厌倦，在同样地事情上做了一遍又一遍。我们想要做新意一点得，我们仍热爱着我们的事业，渴望能摆脱这种厌倦的境地，能专注于具有挑战和令人兴奋的东西。很不幸，今天在这里我不是解决这个问题，至少现在不是，但我在这一步上有了方向。</p>
+<p><img src="http://7te7uy.com1.z0.glb.clouddn.com/1-D5erLRvA-QM4b41aWD7oAg.gif" alt></p>
+<p>不要因为我说的厌倦的场景，而去讨厌自己工作，这不是我想传达的意思，你可能很爱你的公司，和你当前正在创建的产品，但你一定会想逃避那无聊的部分，直接去参与那有趣的部分。构建登录表单，条列商品，文件上传这重复性的任务，可能已经做过很多次了，你可能想能去做那富于挑战的部分，热狗识别机器学习等</p>
+<p><img src="http://7te7uy.com1.z0.glb.clouddn.com/WechatIMG6.jpeg" alt></p>
+<h3 id="2-现有方案"><a href="#2-现有方案" class="headerlink" title="2 现有方案"></a>2 现有方案</h3><p>当你准备开始构建一个 Web 应用，你做完所有的规范工作后，就需要决定用哪些技术的发展。无论你什么时候开始，第一件事就是决定你的语言偏好，你不会再想重构它一遍。这就像搭建一个房子时候，初期的挖泥，制砖。</p>
+<h4 id="使用框架"><a href="#使用框架" class="headerlink" title="使用框架"></a>使用框架</h4><p>你不要去使用原始的方法，尽量去用成熟的框架，和库。这是很方便的，你能得到很多便利，你仅仅需要链接服务端框架，它会和 UI 前端框架一起工作，你还需要创建身份认证层，连接所有服务，API 层，定义你项目的文件，模块，webpack 配置，然后再优化你的代码，使其运行更快，编译的更小。因为你丢失了几个组件，你需要额外添加 jQuery 库，它只是会增加了你站点的一点加载时间。我想说不仅仅是这些。</p>
+<p><img src="http://7te7uy.com1.z0.glb.clouddn.com/1-wY8Q6NEMmkQc0htXz3PEUA.gif" alt></p>
+<h3 id="CMS-比框架更好"><a href="#CMS-比框架更好" class="headerlink" title="CMS 比框架更好"></a>CMS 比框架更好</h3><p>如果你已经使用框架开发很长时间了，知道了这方法是很耗时，如果项目是一个固定费用的项目，你将会花费很多时间在调试，查找缺省，优化代码上，它会花费掉很多额外开销。</p>
+<p>众所周知使用一个现成的CMS。 由于它具有所有您需要的大多数功能，因此在服务器端以及客户端都可以直接使用。 但是大多数开发人员无法理解的是，CMS是为单一目的设计的，它通常看起来像：Page &gt; New Page &gt; Save Page &gt; Publish.</p>
+<p>你可以构建自定义模块，但是经常会花更多的时间来处理 CMS 所带来的 bug 和局限性，所以你的代码可以按照你想要的方式工作。更不用说这些事情会更新一下。 总结：向 CMS 添加自定义模块,会破坏原来的代码的整体性，还带来了隐患。</p>
+<h3 id="不可知设备"><a href="#不可知设备" class="headerlink" title="不可知设备"></a>不可知设备</h3><p>数据层, 大多数人采取框架，然后坚持用 HTML 编辑器，所以用户可以创建页面。 而且大部分的 CMS 都已经内置了 HTML 编辑器，因为它们的目的是在浏览器中呈现一个页面，并且这个工作正常。 但是当您需要在移动应用程序，电视或控制台应用程序上显示时，您必须为此建立特殊的API，以及使用Web视图来显示内容，因为其中包含HTML。</p>
+<p>现在问题是,数据是以设备不可知的方式进行管理。 你后台系统不应该考虑,总是会有一个 Web 浏览器来显示它。 今天所有系统必须具有100％的 API 覆盖率，以便与移动应用和其他设备正确集成。 数据需要”组件”。 假设有一个产品描述需求，其中包含一段文字和图像。 段落和图像需要是组件，而不是HTML标签。 通过这种方式，其他设备可以回收一个概念，您可以使用设备上的本机控制器来显示它。 在浏览器中，它将是一个</p><p>标签和<img>标签，在iOS上可能是UILabel和UIImage类。 你不是用补丁方式使事情兼容。</p>
+<h3 id="Web-开发的石器时代"><a href="#Web-开发的石器时代" class="headerlink" title="Web 开发的石器时代"></a>Web 开发的石器时代</h3><p>当代我们有了汽车， 有了比人类大脑更强大的机器人，机器人可以行走和能和环境的互动，但在 Web 开发中，我们仍然是在创建一个工作的下拉菜单能在页面中垂直对齐的图像。</p>
+<p>你可能会认为这些问题是有趣的，但是我们作为 Web 开发人员与它们一直在斗争，它们一遍又一遍地和它们浪费时间。 这是一个很大的问题，它已经是一个很多年的问题，还没有完全解决。</p>
+<p>令人遗憾的是，像 ReactJs 这样的技术现在可以让我们选择,可以构建,可以扩展,完美的合适的组件。在我看来，这是一个将 Web 发展彻底改革成青铜时代的平台，但下一步是什么呢？</p>
+<p>我们需要进一步改进组件，让它们自动知道如何在组件间进行交互，底层平台自动化我们90％的工作，消除了我们之前所花费的时间和面临的所有和错误，而我们 Web 开发人员有更多的时间专注于机器无法解决的具有挑战性的问题 - 至少尚未解决的问题。 这将是 Web 开发的现代时代.</p>
+  </article>
+  <aside class="table-content" id="site-toc">
+  <div class="table-content-title">
+    <i class="fa fa-arrow-right fa-lg" id="site-toc-hide-btn"></i>
+    <span>目录</span>
+  </div>
+  <div class="table-content-main">
+    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#问题"><span class="toc-text">问题</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-厌倦"><span class="toc-text">1 厌倦</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-现有方案"><span class="toc-text">2 现有方案</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#使用框架"><span class="toc-text">使用框架</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#CMS-比框架更好"><span class="toc-text">CMS 比框架更好</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#不可知设备"><span class="toc-text">不可知设备</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Web-开发的石器时代"><span class="toc-text">Web 开发的石器时代</span></a></li></ol></li></ol>
+  </div>
+</aside>
+  
+    <aside class="passage-copyright">
+      <div>本文作者: 董沅鑫</div>
+      
+        <div>
+          原文链接: 
+          <a href target="_blank">http://blog.alshin.xyz/passages/2017-10-16-4 Problems of Web Development-from Developer's perspective/</a>
+        </div>
+      
+      <div>
+        版权声明: 本博客所有文章除特别声明外, 均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> 许可协议. 转载请注明出处!
+      </div>
+    </aside>
+  
+  
+    <div class="passage-tags">
+     
+      <a href="/tags/翻译/"><i class="fa fa-tags"></i>翻译</a>
+    
+    </div>
+  
+</div>
+
+    </main>
+    
+      
+<div class="site-comment-contanier" data-plateform="leancloud">
+  
+    <p id="site-comment-info">
+      <i class="fa fa-spinner fa-spin"></i> 评论加载中
+    </p>
+    <div id="site-comment"></div>
+  
+</div>
+    
+    <div class="site-footer-wrapper">
+  <footer class="site-footer">
+    <div class="site-footer-info">
+      <i class="fa fa-clock-o"></i> 本站已稳定运行<span id="site-time"></span>
+    </div>
+    
+      <div class="site-footer-info">
+        <i class="fa fa-paw"></i> 您是本站第 <span id="site-count"></span> 位访客
+      </div>
+    
+    
+      <div class="site-footer-info">
+        <i class="fa fa-at"></i> Email: alshin@126.com
+      </div>
+    
+    <div class="site-footer-info">
+      <i class="fa fa-copyright"></i> 
+      2019 <a href="https://github.com/dongyuanxin/theme-ad/" target="_blank">Theme-AD</a>.
+      Created by <a href="https://godbmw.com/" target="_blank">GodBMW</a>.
+      All rights reserved.
+    </div>
+  </footer>
+</div>
+    <div id="site-layer" style="display:none;">
+  <div class="site-layer-content">
+    <div class="site-layer-header">
+      <span class="site-layer-header-title" id="site-layer-title"></span>
+      <i class="fa fa-close" id="site-layer-close"></i>
+    </div>
+    <div class="site-layer-body" id="site-layer-container">
+      <div class="site-layer-input" id="site-layer-search" style="display: none;">
+        <input type="text">
+        <i class="fa fa-search"></i>
+      </div>
+      <div class="site-layer-reward" id="site-layer-reward" style="display: none;">
+      </div>
+      <div id="site-layer-welcome" style="display:none;"></div>
+    </div>
+  </div>
+</div>
+    
+
+<div class="bottom-bar">
+  <div class="bottom-bar-left">
+    <a href="/passages/2017-10-23-Integrating a Third Party API with Rails 5/" data-enable="true">
+      <i class="fa fa-arrow-left"></i>
+    </a>
+    <a href="/passages/2017-09-29-logrotate 归档log/" data-enable="true">
+      <i class="fa fa-arrow-right"></i>
+    </a>
+  </div>
+  <div class="bottom-bar-right">
+    <a href="javascript:void(0);" data-enable="true" id="site-toc-show-btn">
+      <i class="fa fa-bars"></i>
+    </a>
+    
+      <a href="#site-comment" data-enable="true">
+        <i class="fa fa-commenting"></i>
+      </a>
+    
+    <a href="javascript:void(0);" id="site-toggle-share-btn">
+      <i class="fa fa-share-alt"></i>
+    </a>
+    <a href="javascript:void(0);" id="site-reward">
+      <i class="fa fa-thumbs-up"></i>
+    </a>
+    <a href="javascript:void(0);" id="back-top-btn">
+      <i class="fa fa-chevron-up"></i>
+    </a>
+  </div>
+</div>
+    <div id="share-btn">
+  
+  
+  
+  
+  
+</div>
+    
+
+
+
+
+
+    
+  </body>
+</html>

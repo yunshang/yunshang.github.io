@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html>
+  
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="utf-8">
+  <meta name="author" content="alshin">
+  
+  
+  <title>Oauth2 on Rails | Hexo</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  
+    <meta name="keywords" content="Ruby,记录,">
+  
+
+  
+  <meta name="description" content="OAuth2是一个关于授权（authorization）的开放网络标准。">
+
+  
+
+  
+    <script src="//cdn.jsdelivr.net/npm/leancloud-storage@3.11.1/dist/av-min.js" async></script>
+  
+
+  
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML" async></script>
+  
+
+  
+    <script src="//unpkg.com/valine/dist/Valine.min.js" async></script>
+  
+
+  
+
+  <script>
+  // theme-ad's config script
+  // it can be used in every script
+  
+  window.AD_CONFIG = {
+    leancloud: {"appid":"h0CqfjVcnAIMWz4RSInoU7nG-gzGzoHsz","appkey":"oMHPr4FFN8UsdSAjQ6aF0XYY","comment":true,"count":true},
+    welcome: {"enable":false,"interval":30},
+    start_time: "2019-04-03",
+    passwords: ["7c9682053bd95fa77364a9a794236619bc3576bdccc187458e4b9d16f1a1e681", ],
+    is_post: true,
+    lock: false,
+    author: "alshin",
+    share: {"twitter":false,"facebook":false,"weibo":false,"qq":false,"wechat":false},
+    mathjax: true,
+    page_type: "",
+    root: "/"
+  };
+</script>
+
+  <script src="/vendor/sha256.min.js"></script>
+<script src="/js/auth.js"></script>
+<script src="/js/index.js"></script>
+<script src="/vendor/qrcode.min.js"></script>
+
+  
+    <link rel="icon" href="/images/favicon.ico">
+    <link rel="apple-touch-icon" href="/images/touch-icon.png">
+  
+
+  <link href="//netdna.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+
+  <link rel="stylesheet" href="/css/index.css">
+<link rel="stylesheet" href="/styles/components/highlight/highlight.css">
+
+  
+</head>
+  <body>
+    <header class="site-header">
+  <div class="site-header-brand">
+    
+    
+  </div>
+  <div class="site-header-right">
+    <nav class="site-header-navigation">
+      
+        <a href="/" target="_self">首页</a>
+      
+        <a href="/archives/" target="_self">归档</a>
+      
+        <a href="/categories/" target="_self">分类</a>
+      
+    </nav>
+    <div class="site-header-btn">
+      
+        <a href="https://github.com/yunshang/" target="_blank" id="site-github">
+          <i class="fa fa-github-alt"></i>
+        </a>
+      
+      <a href="javascript:void(0);" id="site-nav-btn">
+        <i class="fa fa-ellipsis-v"></i>
+      </a>
+    </div>
+  </div>
+</header>
+<nav class="table-content" id="site-nav">
+  <div class="table-content-title">
+    <span>导航</span>
+  </div>
+  <div class="table-content-main">
+    <ol class="toc">
+      
+        <li class="toc-item">
+          <a href="/" target="_self">
+            首页
+          </a>
+        </li>
+      
+        <li class="toc-item">
+          <a href="/archives/" target="_self">
+            归档
+          </a>
+        </li>
+      
+        <li class="toc-item">
+          <a href="/categories/" target="_self">
+            分类
+          </a>
+        </li>
+      
+    </ol>
+  </div>
+</nav>
+<div id="site-process"></div>
+    <main>
+      
+  <div class="passage">
+  <div class="passage-meta">
+    <span>
+      <i class="fa fa-calendar"></i>2016-09-17
+    </span>
+    
+      <span>
+        | <a href="/categories/Ruby/"><i class="fa fa-bookmark"></i>Ruby</a>
+      </span>
+    
+    
+      <span>
+        | <i class="fa fa-unlock-alt"></i>UNLOCK
+      </span>
+    
+  </div>
+  <h1 class="passage-title">
+    Oauth2 on Rails
+  </h1>
+  
+  <article class="passage-article">
+    <h3 id="Oauth身份验证过程身份认证的服务平台-和一个客服端程序做为用户认证。Rails通常使用devise-doorkeeper-and-omniauth-oauth2-gems构建Oauth应用。"><a href="#Oauth身份验证过程身份认证的服务平台-和一个客服端程序做为用户认证。Rails通常使用devise-doorkeeper-and-omniauth-oauth2-gems构建Oauth应用。" class="headerlink" title="Oauth身份验证过程身份认证的服务平台,和一个客服端程序做为用户认证。Rails通常使用devise, doorkeeper and omniauth-oauth2 gems构建Oauth应用。"></a>Oauth身份验证过程身份认证的服务平台,和一个客服端程序做为用户认证。Rails通常使用devise, doorkeeper and omniauth-oauth2 gems构建Oauth应用。</h3><h2 id="The-server-application"><a href="#The-server-application" class="headerlink" title="The server application"></a>The server application</h2><h3 id="Devise-gem将会提供身份验证-doorkeeper-gem-将允许应用做为一个Oauth2-server。"><a href="#Devise-gem将会提供身份验证-doorkeeper-gem-将允许应用做为一个Oauth2-server。" class="headerlink" title="Devise gem将会提供身份验证, doorkeeper gem 将允许应用做为一个Oauth2 server。"></a>Devise gem将会提供身份验证, doorkeeper gem 将允许应用做为一个Oauth2 server。</h3><h3 id="添加-devise-and-doorkeeper-gems-到Gemfile"><a href="#添加-devise-and-doorkeeper-gems-到Gemfile" class="headerlink" title="添加 devise and doorkeeper gems 到Gemfile"></a>添加 devise and doorkeeper gems 到Gemfile</h3><pre><code class="ruby">gem <span class="string">"devise"</span>
+gem <span class="string">"doorkeeper"</span>
+</code></pre>
+<h3 id="生成这gem的引用和迁移文件。"><a href="#生成这gem的引用和迁移文件。" class="headerlink" title="生成这gem的引用和迁移文件。"></a>生成这gem的引用和迁移文件。</h3><pre><code class="ruby">rails g <span class="symbol">devise:</span>install
+rails g devise User
+
+rails g <span class="symbol">doorkeeper:</span>install
+rails generate <span class="symbol">doorkeeper:</span>migration
+
+rake <span class="symbol">db:</span>migrate
+</code></pre>
+<h3 id="这过程会有很多文件生成-配置doorkeeper-rb文件-修改doorkeeper的初始化，让它使用devise作为认证。"><a href="#这过程会有很多文件生成-配置doorkeeper-rb文件-修改doorkeeper的初始化，让它使用devise作为认证。" class="headerlink" title="这过程会有很多文件生成,配置doorkeeper.rb文件,修改doorkeeper的初始化，让它使用devise作为认证。"></a>这过程会有很多文件生成,配置doorkeeper.rb文件,修改doorkeeper的初始化，让它使用devise作为认证。</h3><pre><code class="ruby">resource_owner_authenticator <span class="keyword">do</span>
+  current_user <span class="params">||</span> <span class="keyword">begin</span>
+    session[<span class="symbol">:user_return_to</span>] = request.fullpath
+    redirect_to new_user_session_url
+  <span class="keyword">end</span>
+<span class="keyword">end</span>
+
+admin_authenticator <span class="keyword">do</span>
+  current_user <span class="params">||</span> redirect_to(new_user_session_url)
+<span class="keyword">end</span>
+</code></pre>
+<h3 id="The-resource-owner-authenticator这代码块的意思-允许-devise-认证的用户可以访问doorkeeper的资源。假如用户没有通过认证-就存储url-跳转到登录页面。The-admin-authenticator-bock-做为访问用户限制。它用来管理客服端应用程序的所需令牌身份验证的限制。"><a href="#The-resource-owner-authenticator这代码块的意思-允许-devise-认证的用户可以访问doorkeeper的资源。假如用户没有通过认证-就存储url-跳转到登录页面。The-admin-authenticator-bock-做为访问用户限制。它用来管理客服端应用程序的所需令牌身份验证的限制。" class="headerlink" title="The resource_owner_authenticator这代码块的意思:允许 devise 认证的用户可以访问doorkeeper的资源。假如用户没有通过认证,就存储url,跳转到登录页面。The admin_authenticator bock 做为访问用户限制。它用来管理客服端应用程序的所需令牌身份验证的限制。"></a>The resource_owner_authenticator这代码块的意思:允许 devise 认证的用户可以访问doorkeeper的资源。假如用户没有通过认证,就存储url,跳转到登录页面。The admin_authenticator bock 做为访问用户限制。它用来管理客服端应用程序的所需令牌身份验证的限制。</h3><h3 id="创建控制器，为客服端提供认证用户的信息。"><a href="#创建控制器，为客服端提供认证用户的信息。" class="headerlink" title="创建控制器，为客服端提供认证用户的信息。"></a>创建控制器，为客服端提供认证用户的信息。</h3><pre><code class="ruby"><span class="class"><span class="keyword">class</span> <span class="title">ApplicationController</span> &lt; ActionController::Base</span>
+  before_action <span class="symbol">:doorkeeper_authorize!</span>, <span class="symbol">only:</span> <span class="symbol">:me</span>
+
+  <span class="function"><span class="keyword">def</span> <span class="title">me</span></span>
+    render <span class="symbol">json:</span> User.find(doorkeeper_token.resource_owner_id).as_json
+  <span class="keyword">end</span>
+<span class="keyword">end</span>
+</code></pre>
+<h3 id="doorkeeper-authorize-检测请求oauth的授权码是否正确-如果错误将渲染401-Unauthorized的请求头。"><a href="#doorkeeper-authorize-检测请求oauth的授权码是否正确-如果错误将渲染401-Unauthorized的请求头。" class="headerlink" title="doorkeeper_authorize! 检测请求oauth的授权码是否正确,如果错误将渲染401 Unauthorized的请求头。"></a>doorkeeper_authorize! 检测请求oauth的授权码是否正确,如果错误将渲染401 Unauthorized的请求头。</h3><h3 id="不能忘记更新路由"><a href="#不能忘记更新路由" class="headerlink" title="不能忘记更新路由"></a>不能忘记更新路由</h3><pre><code class="ruby">Rails.application.routes.draw <span class="keyword">do</span>
+  use_doorkeeper
+  devise_for <span class="symbol">:users</span>
+
+  get <span class="string">'/me'</span> =&gt; <span class="string">'application#me'</span>
+<span class="keyword">end</span>
+</code></pre>
+<h3 id="客服端应用需要被注册，在-server-application平台上。访问http-localhost-3000-oauth-applications-new，注册新应用。你将会跳转到一个认证页面，按照规定要求填写信息后，将会被返回client-id-secret信息。"><a href="#客服端应用需要被注册，在-server-application平台上。访问http-localhost-3000-oauth-applications-new，注册新应用。你将会跳转到一个认证页面，按照规定要求填写信息后，将会被返回client-id-secret信息。" class="headerlink" title="客服端应用需要被注册，在 server application平台上。访问http://localhost:3000/oauth/applications/new，注册新应用。你将会跳转到一个认证页面，按照规定要求填写信息后，将会被返回client_id,secret信息。"></a>客服端应用需要被注册，在 server application平台上。访问<a href="http://localhost:3000/oauth/applications/new，注册新应用。你将会跳转到一个认证页面，按照规定要求填写信息后，将会被返回client_id,secret信息。" target="_blank" rel="noopener">http://localhost:3000/oauth/applications/new，注册新应用。你将会跳转到一个认证页面，按照规定要求填写信息后，将会被返回client_id,secret信息。</a></h3>
+  </article>
+  <aside class="table-content" id="site-toc">
+  <div class="table-content-title">
+    <i class="fa fa-arrow-right fa-lg" id="site-toc-hide-btn"></i>
+    <span>目录</span>
+  </div>
+  <div class="table-content-main">
+    <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#Oauth身份验证过程身份认证的服务平台-和一个客服端程序做为用户认证。Rails通常使用devise-doorkeeper-and-omniauth-oauth2-gems构建Oauth应用。"><span class="toc-text">Oauth身份验证过程身份认证的服务平台,和一个客服端程序做为用户认证。Rails通常使用devise, doorkeeper and omniauth-oauth2 gems构建Oauth应用。</span></a></li></ol><li class="toc-item toc-level-2"><a class="toc-link" href="#The-server-application"><span class="toc-text">The server application</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Devise-gem将会提供身份验证-doorkeeper-gem-将允许应用做为一个Oauth2-server。"><span class="toc-text">Devise gem将会提供身份验证, doorkeeper gem 将允许应用做为一个Oauth2 server。</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#添加-devise-and-doorkeeper-gems-到Gemfile"><span class="toc-text">添加 devise and doorkeeper gems 到Gemfile</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#生成这gem的引用和迁移文件。"><span class="toc-text">生成这gem的引用和迁移文件。</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#这过程会有很多文件生成-配置doorkeeper-rb文件-修改doorkeeper的初始化，让它使用devise作为认证。"><span class="toc-text">这过程会有很多文件生成,配置doorkeeper.rb文件,修改doorkeeper的初始化，让它使用devise作为认证。</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#The-resource-owner-authenticator这代码块的意思-允许-devise-认证的用户可以访问doorkeeper的资源。假如用户没有通过认证-就存储url-跳转到登录页面。The-admin-authenticator-bock-做为访问用户限制。它用来管理客服端应用程序的所需令牌身份验证的限制。"><span class="toc-text">The resource_owner_authenticator这代码块的意思:允许 devise 认证的用户可以访问doorkeeper的资源。假如用户没有通过认证,就存储url,跳转到登录页面。The admin_authenticator bock 做为访问用户限制。它用来管理客服端应用程序的所需令牌身份验证的限制。</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#创建控制器，为客服端提供认证用户的信息。"><span class="toc-text">创建控制器，为客服端提供认证用户的信息。</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#doorkeeper-authorize-检测请求oauth的授权码是否正确-如果错误将渲染401-Unauthorized的请求头。"><span class="toc-text">doorkeeper_authorize! 检测请求oauth的授权码是否正确,如果错误将渲染401 Unauthorized的请求头。</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#不能忘记更新路由"><span class="toc-text">不能忘记更新路由</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#客服端应用需要被注册，在-server-application平台上。访问http-localhost-3000-oauth-applications-new，注册新应用。你将会跳转到一个认证页面，按照规定要求填写信息后，将会被返回client-id-secret信息。"><span class="toc-text">客服端应用需要被注册，在 server application平台上。访问http://localhost:3000/oauth/applications/new，注册新应用。你将会跳转到一个认证页面，按照规定要求填写信息后，将会被返回client_id,secret信息。</span></a></li></ol>
+  </li></div>
+</aside>
+  
+    <aside class="passage-copyright">
+      <div>本文作者: 董沅鑫</div>
+      
+        <div>
+          原文链接: 
+          <a href target="_blank">http://blog.alshin.xyz/passages/2016-09-17-oauth2 on rails/</a>
+        </div>
+      
+      <div>
+        版权声明: 本博客所有文章除特别声明外, 均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> 许可协议. 转载请注明出处!
+      </div>
+    </aside>
+  
+  
+    <div class="passage-tags">
+     
+      <a href="/tags/记录/"><i class="fa fa-tags"></i>记录</a>
+    
+    </div>
+  
+</div>
+
+    </main>
+    
+      
+<div class="site-comment-contanier" data-plateform="leancloud">
+  
+    <p id="site-comment-info">
+      <i class="fa fa-spinner fa-spin"></i> 评论加载中
+    </p>
+    <div id="site-comment"></div>
+  
+</div>
+    
+    <div class="site-footer-wrapper">
+  <footer class="site-footer">
+    <div class="site-footer-info">
+      <i class="fa fa-clock-o"></i> 本站已稳定运行<span id="site-time"></span>
+    </div>
+    
+      <div class="site-footer-info">
+        <i class="fa fa-paw"></i> 您是本站第 <span id="site-count"></span> 位访客
+      </div>
+    
+    
+      <div class="site-footer-info">
+        <i class="fa fa-at"></i> Email: alshin@126.com
+      </div>
+    
+    <div class="site-footer-info">
+      <i class="fa fa-copyright"></i> 
+      2019 <a href="https://github.com/dongyuanxin/theme-ad/" target="_blank">Theme-AD</a>.
+      Created by <a href="https://godbmw.com/" target="_blank">GodBMW</a>.
+      All rights reserved.
+    </div>
+  </footer>
+</div>
+    <div id="site-layer" style="display:none;">
+  <div class="site-layer-content">
+    <div class="site-layer-header">
+      <span class="site-layer-header-title" id="site-layer-title"></span>
+      <i class="fa fa-close" id="site-layer-close"></i>
+    </div>
+    <div class="site-layer-body" id="site-layer-container">
+      <div class="site-layer-input" id="site-layer-search" style="display: none;">
+        <input type="text">
+        <i class="fa fa-search"></i>
+      </div>
+      <div class="site-layer-reward" id="site-layer-reward" style="display: none;">
+      </div>
+      <div id="site-layer-welcome" style="display:none;"></div>
+    </div>
+  </div>
+</div>
+    
+
+<div class="bottom-bar">
+  <div class="bottom-bar-left">
+    <a href="/passages/2016-09-30-%的用法/" data-enable="true">
+      <i class="fa fa-arrow-left"></i>
+    </a>
+    <a href="/passages/2016-09-17-the client application/" data-enable="true">
+      <i class="fa fa-arrow-right"></i>
+    </a>
+  </div>
+  <div class="bottom-bar-right">
+    <a href="javascript:void(0);" data-enable="true" id="site-toc-show-btn">
+      <i class="fa fa-bars"></i>
+    </a>
+    
+      <a href="#site-comment" data-enable="true">
+        <i class="fa fa-commenting"></i>
+      </a>
+    
+    <a href="javascript:void(0);" id="site-toggle-share-btn">
+      <i class="fa fa-share-alt"></i>
+    </a>
+    <a href="javascript:void(0);" id="site-reward">
+      <i class="fa fa-thumbs-up"></i>
+    </a>
+    <a href="javascript:void(0);" id="back-top-btn">
+      <i class="fa fa-chevron-up"></i>
+    </a>
+  </div>
+</div>
+    <div id="share-btn">
+  
+  
+  
+  
+  
+</div>
+    
+
+
+
+
+
+    
+  </body>
+</html>

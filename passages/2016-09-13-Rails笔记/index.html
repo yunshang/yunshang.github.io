@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html>
+  
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="utf-8">
+  <meta name="author" content="alshin">
+  
+  
+  <title>Rails 笔记 | Hexo</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  
+    <meta name="keywords" content="Ruby,记录,">
+  
+
+  
+  <meta name="description" content="简洁代码臃肿的写法flag = falseif request.referer.present?  if request.referer.include?(/users/sign_in) || request.referer.include?(/users/sign_up)    flag = true  endend">
+
+  
+
+  
+    <script src="//cdn.jsdelivr.net/npm/leancloud-storage@3.11.1/dist/av-min.js" async></script>
+  
+
+  
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML" async></script>
+  
+
+  
+    <script src="//unpkg.com/valine/dist/Valine.min.js" async></script>
+  
+
+  
+
+  <script>
+  // theme-ad's config script
+  // it can be used in every script
+  
+  window.AD_CONFIG = {
+    leancloud: {"appid":"h0CqfjVcnAIMWz4RSInoU7nG-gzGzoHsz","appkey":"oMHPr4FFN8UsdSAjQ6aF0XYY","comment":true,"count":true},
+    welcome: {"enable":false,"interval":30},
+    start_time: "2019-04-03",
+    passwords: ["7c9682053bd95fa77364a9a794236619bc3576bdccc187458e4b9d16f1a1e681", ],
+    is_post: true,
+    lock: false,
+    author: "alshin",
+    share: {"twitter":false,"facebook":false,"weibo":false,"qq":false,"wechat":false},
+    mathjax: true,
+    page_type: "",
+    root: "/"
+  };
+</script>
+
+  <script src="/vendor/sha256.min.js"></script>
+<script src="/js/auth.js"></script>
+<script src="/js/index.js"></script>
+<script src="/vendor/qrcode.min.js"></script>
+
+  
+    <link rel="icon" href="/images/favicon.ico">
+    <link rel="apple-touch-icon" href="/images/touch-icon.png">
+  
+
+  <link href="//netdna.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+
+  <link rel="stylesheet" href="/css/index.css">
+<link rel="stylesheet" href="/styles/components/highlight/highlight.css">
+
+  
+</head>
+  <body>
+    <header class="site-header">
+  <div class="site-header-brand">
+    
+    
+  </div>
+  <div class="site-header-right">
+    <nav class="site-header-navigation">
+      
+        <a href="/" target="_self">首页</a>
+      
+        <a href="/archives/" target="_self">归档</a>
+      
+        <a href="/categories/" target="_self">分类</a>
+      
+    </nav>
+    <div class="site-header-btn">
+      
+        <a href="https://github.com/yunshang/" target="_blank" id="site-github">
+          <i class="fa fa-github-alt"></i>
+        </a>
+      
+      <a href="javascript:void(0);" id="site-nav-btn">
+        <i class="fa fa-ellipsis-v"></i>
+      </a>
+    </div>
+  </div>
+</header>
+<nav class="table-content" id="site-nav">
+  <div class="table-content-title">
+    <span>导航</span>
+  </div>
+  <div class="table-content-main">
+    <ol class="toc">
+      
+        <li class="toc-item">
+          <a href="/" target="_self">
+            首页
+          </a>
+        </li>
+      
+        <li class="toc-item">
+          <a href="/archives/" target="_self">
+            归档
+          </a>
+        </li>
+      
+        <li class="toc-item">
+          <a href="/categories/" target="_self">
+            分类
+          </a>
+        </li>
+      
+    </ol>
+  </div>
+</nav>
+<div id="site-process"></div>
+    <main>
+      
+  <div class="passage">
+  <div class="passage-meta">
+    <span>
+      <i class="fa fa-calendar"></i>2016-09-13
+    </span>
+    
+      <span>
+        | <a href="/categories/Ruby/"><i class="fa fa-bookmark"></i>Ruby</a>
+      </span>
+    
+    
+      <span>
+        | <i class="fa fa-unlock-alt"></i>UNLOCK
+      </span>
+    
+  </div>
+  <h1 class="passage-title">
+    Rails 笔记
+  </h1>
+  
+  <article class="passage-article">
+    <blockquote>
+<p>简洁写法</p>
+</blockquote>
+<pre><code class="ruby">flag = request.referer &amp;&amp; [<span class="string">"/users/sign_in"</span>, <span class="string">"/users/sign_up"</span>].<span class="keyword">include</span>?(request.referer)
+</code></pre>
+<pre><code class="ruby">@filters_arry = Array.new  <span class="comment">#bad</span>
+@filters_arry = [] <span class="comment">#good</span>
+
+<span class="keyword">if</span> @question.answers.count &gt;<span class="number">0</span>  <span class="comment">#bad</span>
+<span class="keyword">if</span> @question.answers.count.positive?  <span class="comment">#good</span>
+
+
+<span class="keyword">if</span> @question.answers.count == <span class="number">0</span>  <span class="comment">#bad</span>
+<span class="keyword">if</span> @question.answers.count.zero?  <span class="comment">#good</span>
+</code></pre>
+<h2 id="scope-的用法"><a href="#scope-的用法" class="headerlink" title="scope 的用法"></a>scope 的用法</h2><blockquote>
+<p>给一个ActiveRecord::关系对象，添加一个类方法用于检索和查询对象,如果它返回nil或假,者返回的所有范围。</p>
+</blockquote>
+<pre><code class="ruby"><span class="comment">#简单的方式</span>
+<span class="class"><span class="keyword">class</span> <span class="title">Post</span> &lt; ActiveRecord::Base</span>
+  scope <span class="symbol">:is_active</span>, {where(<span class="symbol">status:</span> <span class="string">'active'</span>)}
+  scope <span class="symbol">:has_content</span>, {joins(<span class="symbol">:comment</span>).where(<span class="string">"comments.content is not null"</span>)}
+<span class="keyword">end</span>
+
+<span class="comment">#带参数</span>
+<span class="class"><span class="keyword">class</span> <span class="title">Shirt</span> &lt; ActiveRecord::Base</span>
+   scope <span class="symbol">:colored</span>, lambda { <span class="params">|color|</span> where(<span class="symbol">:color</span> =&gt; color) }       <span class="comment">#旧写法</span>
+   scope <span class="symbol">:colored</span>, -&gt;(color) { where(<span class="symbol">:color</span> =&gt; color) }                <span class="comment">#新写法</span>
+ <span class="keyword">end</span>
+</code></pre>
+<h3 id="当我们传入的参数如果是一个变化的量时，要使用lambda-一个是在类初次加载时生效；一个是在被调用时才生效。"><a href="#当我们传入的参数如果是一个变化的量时，要使用lambda-一个是在类初次加载时生效；一个是在被调用时才生效。" class="headerlink" title="当我们传入的参数如果是一个变化的量时，要使用lambda.一个是在类初次加载时生效；一个是在被调用时才生效。"></a>当我们传入的参数如果是一个变化的量时，要使用lambda.一个是在类初次加载时生效；一个是在被调用时才生效。</h3>
+  </article>
+  <aside class="table-content" id="site-toc">
+  <div class="table-content-title">
+    <i class="fa fa-arrow-right fa-lg" id="site-toc-hide-btn"></i>
+    <span>目录</span>
+  </div>
+  <div class="table-content-main">
+    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#scope-的用法"><span class="toc-text">scope 的用法</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#当我们传入的参数如果是一个变化的量时，要使用lambda-一个是在类初次加载时生效；一个是在被调用时才生效。"><span class="toc-text">当我们传入的参数如果是一个变化的量时，要使用lambda.一个是在类初次加载时生效；一个是在被调用时才生效。</span></a></li></ol></li></ol>
+  </div>
+</aside>
+  
+    <aside class="passage-copyright">
+      <div>本文作者: 董沅鑫</div>
+      
+        <div>
+          原文链接: 
+          <a href target="_blank">http://blog.alshin.xyz/passages/2016-09-13-Rails笔记/</a>
+        </div>
+      
+      <div>
+        版权声明: 本博客所有文章除特别声明外, 均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> 许可协议. 转载请注明出处!
+      </div>
+    </aside>
+  
+  
+    <div class="passage-tags">
+     
+      <a href="/tags/记录/"><i class="fa fa-tags"></i>记录</a>
+    
+    </div>
+  
+</div>
+
+    </main>
+    
+      
+<div class="site-comment-contanier" data-plateform="leancloud">
+  
+    <p id="site-comment-info">
+      <i class="fa fa-spinner fa-spin"></i> 评论加载中
+    </p>
+    <div id="site-comment"></div>
+  
+</div>
+    
+    <div class="site-footer-wrapper">
+  <footer class="site-footer">
+    <div class="site-footer-info">
+      <i class="fa fa-clock-o"></i> 本站已稳定运行<span id="site-time"></span>
+    </div>
+    
+      <div class="site-footer-info">
+        <i class="fa fa-paw"></i> 您是本站第 <span id="site-count"></span> 位访客
+      </div>
+    
+    
+      <div class="site-footer-info">
+        <i class="fa fa-at"></i> Email: alshin@126.com
+      </div>
+    
+    <div class="site-footer-info">
+      <i class="fa fa-copyright"></i> 
+      2019 <a href="https://github.com/dongyuanxin/theme-ad/" target="_blank">Theme-AD</a>.
+      Created by <a href="https://godbmw.com/" target="_blank">GodBMW</a>.
+      All rights reserved.
+    </div>
+  </footer>
+</div>
+    <div id="site-layer" style="display:none;">
+  <div class="site-layer-content">
+    <div class="site-layer-header">
+      <span class="site-layer-header-title" id="site-layer-title"></span>
+      <i class="fa fa-close" id="site-layer-close"></i>
+    </div>
+    <div class="site-layer-body" id="site-layer-container">
+      <div class="site-layer-input" id="site-layer-search" style="display: none;">
+        <input type="text">
+        <i class="fa fa-search"></i>
+      </div>
+      <div class="site-layer-reward" id="site-layer-reward" style="display: none;">
+      </div>
+      <div id="site-layer-welcome" style="display:none;"></div>
+    </div>
+  </div>
+</div>
+    
+
+<div class="bottom-bar">
+  <div class="bottom-bar-left">
+    <a href="/passages/2016-09-17-the client application/" data-enable="true">
+      <i class="fa fa-arrow-left"></i>
+    </a>
+    <a href="/passages/2016-08-25-8月日常/" data-enable="true">
+      <i class="fa fa-arrow-right"></i>
+    </a>
+  </div>
+  <div class="bottom-bar-right">
+    <a href="javascript:void(0);" data-enable="true" id="site-toc-show-btn">
+      <i class="fa fa-bars"></i>
+    </a>
+    
+      <a href="#site-comment" data-enable="true">
+        <i class="fa fa-commenting"></i>
+      </a>
+    
+    <a href="javascript:void(0);" id="site-toggle-share-btn">
+      <i class="fa fa-share-alt"></i>
+    </a>
+    <a href="javascript:void(0);" id="site-reward">
+      <i class="fa fa-thumbs-up"></i>
+    </a>
+    <a href="javascript:void(0);" id="back-top-btn">
+      <i class="fa fa-chevron-up"></i>
+    </a>
+  </div>
+</div>
+    <div id="share-btn">
+  
+  
+  
+  
+  
+</div>
+    
+
+
+
+
+
+    
+  </body>
+</html>

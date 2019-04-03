@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html>
+  
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="utf-8">
+  <meta name="author" content="alshin">
+  
+  
+  <title>Docker 入门学习 | Hexo</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  
+    <meta name="keywords" content="Docker,Docker,">
+  
+
+  
+  <meta name="description" content="Docker 的基本概念：镜像(Image)容器(Container)仓库(Repository)">
+
+  
+
+  
+    <script src="//cdn.jsdelivr.net/npm/leancloud-storage@3.11.1/dist/av-min.js" async></script>
+  
+
+  
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML" async></script>
+  
+
+  
+    <script src="//unpkg.com/valine/dist/Valine.min.js" async></script>
+  
+
+  
+
+  <script>
+  // theme-ad's config script
+  // it can be used in every script
+  
+  window.AD_CONFIG = {
+    leancloud: {"appid":"h0CqfjVcnAIMWz4RSInoU7nG-gzGzoHsz","appkey":"oMHPr4FFN8UsdSAjQ6aF0XYY","comment":true,"count":true},
+    welcome: {"enable":false,"interval":30},
+    start_time: "2019-04-03",
+    passwords: ["7c9682053bd95fa77364a9a794236619bc3576bdccc187458e4b9d16f1a1e681", ],
+    is_post: true,
+    lock: false,
+    author: "alshin",
+    share: {"twitter":false,"facebook":false,"weibo":false,"qq":false,"wechat":false},
+    mathjax: true,
+    page_type: "",
+    root: "/"
+  };
+</script>
+
+  <script src="/vendor/sha256.min.js"></script>
+<script src="/js/auth.js"></script>
+<script src="/js/index.js"></script>
+<script src="/vendor/qrcode.min.js"></script>
+
+  
+    <link rel="icon" href="/images/favicon.ico">
+    <link rel="apple-touch-icon" href="/images/touch-icon.png">
+  
+
+  <link href="//netdna.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+
+  <link rel="stylesheet" href="/css/index.css">
+<link rel="stylesheet" href="/styles/components/highlight/highlight.css">
+
+  
+</head>
+  <body>
+    <header class="site-header">
+  <div class="site-header-brand">
+    
+    
+  </div>
+  <div class="site-header-right">
+    <nav class="site-header-navigation">
+      
+        <a href="/" target="_self">首页</a>
+      
+        <a href="/archives/" target="_self">归档</a>
+      
+        <a href="/categories/" target="_self">分类</a>
+      
+    </nav>
+    <div class="site-header-btn">
+      
+        <a href="https://github.com/yunshang/" target="_blank" id="site-github">
+          <i class="fa fa-github-alt"></i>
+        </a>
+      
+      <a href="javascript:void(0);" id="site-nav-btn">
+        <i class="fa fa-ellipsis-v"></i>
+      </a>
+    </div>
+  </div>
+</header>
+<nav class="table-content" id="site-nav">
+  <div class="table-content-title">
+    <span>导航</span>
+  </div>
+  <div class="table-content-main">
+    <ol class="toc">
+      
+        <li class="toc-item">
+          <a href="/" target="_self">
+            首页
+          </a>
+        </li>
+      
+        <li class="toc-item">
+          <a href="/archives/" target="_self">
+            归档
+          </a>
+        </li>
+      
+        <li class="toc-item">
+          <a href="/categories/" target="_self">
+            分类
+          </a>
+        </li>
+      
+    </ol>
+  </div>
+</nav>
+<div id="site-process"></div>
+    <main>
+      
+  <div class="passage">
+  <div class="passage-meta">
+    <span>
+      <i class="fa fa-calendar"></i>2017-07-23
+    </span>
+    
+      <span>
+        | <a href="/categories/Docker/"><i class="fa fa-bookmark"></i>Docker</a>
+      </span>
+    
+    
+      <span>
+        | <i class="fa fa-unlock-alt"></i>UNLOCK
+      </span>
+    
+  </div>
+  <h1 class="passage-title">
+    Docker 入门学习
+  </h1>
+  
+  <article class="passage-article">
+    <h3 id="用户权限"><a href="#用户权限" class="headerlink" title="用户权限"></a>用户权限</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">sudo groupadd docker # 增加 docker 用户组</span><br><span class="line">sudo gpasswd -a $&#123;USER&#125; docker  # 当前用户加入 docker</span><br><span class="line">sudo service docker restart # 重启 docker</span><br></pre></td></tr></table></figure>
+<h3 id="镜像"><a href="#镜像" class="headerlink" title="镜像"></a>镜像</h3><p> Docker Hub 仓库下载一个 Ubuntu 14.04 操作系统的镜像</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">docker pull ubuntu:14.04</span><br><span class="line">docker pull dl.dockerpool.com:5000/ubuntu:12.04 #指定服务器地址</span><br></pre></td></tr></table></figure>
+<p>列出镜像</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker images</span><br></pre></td></tr></table></figure>
+<p>通过镜像启动容器</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run -t -i training/sinatra /bin/bash</span><br></pre></td></tr></table></figure>
+<p>修改容器，提交更新后的副本</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker commit -m &apos;Added json gem&apos; -a &apos;Docker Newbee&apos; 44ced85d1270 andrew/sinatra:v2</span><br></pre></td></tr></table></figure>
+<p>-m 用来指定提交的说明信息<br>-a 指定更新的用户信息<br>44ced85d1270 是容器的 ID<br>andrew/sinatra:v2 是仓库名以及 tag 信息</p>
+<p>移除镜像</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker rmi training/sinatra</span><br></pre></td></tr></table></figure>
+<p>清理所有未打标签的镜像</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">docker rmi $(docker images -q -f &quot;dangling=true&quot;)</span><br><span class="line"># docker rmi $(docker images --quiet --filter &quot;dangling=true&quot; # 完整命令</span><br></pre></td></tr></table></figure>
+<p>不能连接 <a href="https://index.docker.io" target="_blank" rel="noopener">https://index.docker.io</a><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">docker-machine restart default      # Restart the environment</span><br><span class="line">eval $(docker-machine env default)  # Refresh your environment settings</span><br></pre></td></tr></table></figure></p>
+<p>利用 Dockerfile 来创建镜像</p>
+<h3 id="容器"><a href="#容器" class="headerlink" title="容器"></a>容器</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run -t -i ubuntu:14.04 /bin/bash</span><br></pre></td></tr></table></figure>
+<p><code>-t</code>  选项让 Docker 分配一个伪终端(pseudo-tty)并绑定到容器的标准输入 上<br><code>-i</code>   则让容器的标准输入保持打开</p>
+<p>当利用 docker run 来创建容器时,Docker 在后台运行的标准操作包括: </p>
+<ul>
+<li>检查本地是否存在指定的镜像,不存在就从公有仓库下载</li>
+<li>利用镜像创建并启动一个容器 分配一个文件系统,并在只读的镜像层外面挂载一层可读写层 </li>
+<li>从宿主主机配置的网桥接口中桥接一个虚拟接口到容器中去 </li>
+<li>从地址池配置一个 ip 地址给容器</li>
+<li>执行用户指定的应用程序</li>
+<li>执行完毕后容器被终止</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker run -d ubuntu:14.04 /bin/sh -c <span class="string">"while true; do echo</span></span><br></pre></td></tr></table></figure>
+<p>会在后台运行并不会把输出的结果(STDOUT)打印到宿主机上面(输出结果 可以用 <code>docker logs</code> 查看)</p>
+<h4 id="进入容器"><a href="#进入容器" class="headerlink" title="进入容器"></a>进入容器</h4><p>1 bashrc_docker </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">wget -P ~ https://github.com/yeasy/docker_practice/raw/master/_local/.bashrc_docker;</span><br><span class="line"><span class="built_in">echo</span> <span class="string">"[ -f ~/.bashrc_docker ] &amp;&amp; . ~/.bashrc_docker"</span> &gt;&gt; ~/.bashrc; <span class="built_in">source</span> ~/.bashrc</span><br><span class="line"></span><br><span class="line">docker-enter &lt;容器id&gt;</span><br></pre></td></tr></table></figure>
+<p>2 nsenter</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ docker inspect -f &#123;&#123;.State.Pid&#125;&#125; b62a42c75ce2</span><br><span class="line">25234</span><br><span class="line"></span><br><span class="line">nsenter --target 25234 --mount --uts --ipc --net --pid</span><br></pre></td></tr></table></figure>
+<p>3 exec, 这个简单好用</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ docker <span class="built_in">exec</span> -it 316f9f5ee7c9  /bin/bash</span><br><span class="line">root@316f9f5ee7c9:/srv/rorapps/rmovie<span class="comment"># bash --login</span></span><br></pre></td></tr></table></figure>
+<h4 id="导出容器"><a href="#导出容器" class="headerlink" title="导出容器"></a>导出容器</h4><p><code>docker export</code> 导出容器快照到本地文件</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ docker ps -a</span><br><span class="line">CONTAINER ID        IMAGE               COMMAND             CREATED             STATUS                    PORTS               NAMES</span><br><span class="line">7691a814370e        ubuntu:14.04        <span class="string">"/bin/bash"</span>         36 hours ago        Exited (0) 21 hours ago                       <span class="built_in">test</span></span><br><span class="line">$ docker <span class="built_in">export</span> 7691a814370e &gt; ubuntu.tar</span><br></pre></td></tr></table></figure>
+<h4 id="导入容器"><a href="#导入容器" class="headerlink" title="导入容器"></a>导入容器</h4><p>使用 <code>docker import</code> 从容器快照文件中再导入为镜像</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ cat ubuntu.tar | docker import - <span class="built_in">test</span>/ubuntu:v1.0</span><br><span class="line">$ docker images</span><br><span class="line">REPOSITORY          TAG                 IMAGE ID            CREATED              VIRTUAL SIZE</span><br><span class="line"><span class="built_in">test</span>/ubuntu         v1.0                9d37a6082e97        About a minute ago   171.3 MB</span><br></pre></td></tr></table></figure>
+<h4 id="清除容器"><a href="#清除容器" class="headerlink" title="清除容器"></a>清除容器</h4><p>清理所有处于终止状态的容器</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker rm $(docker ps -a -q)</span><br></pre></td></tr></table></figure>
+<h4 id="删除容器"><a href="#删除容器" class="headerlink" title="删除容器"></a>删除容器</h4><p><code>docker rm</code> 来删除一个处于终止状态的容器</p>
+<h3 id="网络配置"><a href="#网络配置" class="headerlink" title="网络配置"></a>网络配置</h3><h4 id="网络端口映射"><a href="#网络端口映射" class="headerlink" title="网络端口映射"></a>网络端口映射</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run -d -p 127.0.0.1::5000 training/webapp python app.py</span><br></pre></td></tr></table></figure>
+<p>绑定端口 5000 容器动态端口，并且让 localhost 访问</p>
+<h3 id="仓库"><a href="#仓库" class="headerlink" title="仓库"></a>仓库</h3><p>仓库（Repository）是集中存放镜像的地方</p>
+<h4 id="登录"><a href="#登录" class="headerlink" title="登录"></a>登录</h4><p>可以通过执行 <code>docker login</code> 命令来输入用户名、密码和邮箱来完成注册和登录。 注册成功后，本地用户目录的 <code>.dockercfg</code> 中将保存用户的认证信息。</p>
+<h4 id="基本操作"><a href="#基本操作" class="headerlink" title="基本操作"></a>基本操作</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">docker search centos <span class="comment"># 搜索镜像</span></span><br><span class="line">docker pull centos <span class="comment"># 下载官方镜像到本地</span></span><br><span class="line">docker push andrewzhyl/rmovie_base:v1  <span class="comment"># 上传镜像到公共仓库 Docker Hub</span></span><br><span class="line">docker tag IMAGE[:TAG] [REGISTRYHOST/][USERNAME/]NAME[:TAG] <span class="comment"># 标记镜像，复制一份</span></span><br></pre></td></tr></table></figure>
+<h2 id="数据管理"><a href="#数据管理" class="headerlink" title="数据管理"></a>数据管理</h2><p>容器中管理数据主要有两种方式:</p>
+<ul>
+<li>数据卷（Data volumes）</li>
+<li>数据卷容器（Data volume containers）</li>
+</ul>
+<h3 id="数据卷"><a href="#数据卷" class="headerlink" title="数据卷"></a>数据卷</h3><h4 id="删除数据卷"><a href="#删除数据卷" class="headerlink" title="删除数据卷"></a>删除数据卷</h4><ul>
+<li>数据卷是被设计用来持久化数据的，它的生命周期独立于容器</li>
+<li>删除容器的时候使用 <code>docker rm -v</code> 才会删除数据卷，不然不会删除</li>
+<li>Docker 挂载数据卷的默认权限是读写，用户也可以通过 :ro 指定为只读</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ docker run -d -P --name web -v /src/webapp:/opt/webapp:ro</span><br><span class="line">training/webapp python app.py</span><br></pre></td></tr></table></figure>
+<h4 id="挂载一个主机目录作为数据卷"><a href="#挂载一个主机目录作为数据卷" class="headerlink" title="挂载一个主机目录作为数据卷"></a>挂载一个主机目录作为数据卷</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run -itd -P --name web -v /home/zhangyulong/rmovie_dev/gems:/srv/rorapps/gems rmovie_dev:v1 /bin/bash</span><br></pre></td></tr></table></figure>
+<p>挂在主机的 gems 作为 rmovie_dev 的数据卷</p>
+<h4 id="查看数据卷的具体信息"><a href="#查看数据卷的具体信息" class="headerlink" title="查看数据卷的具体信息"></a>查看数据卷的具体信息</h4><p>在主机里使用以下命令可以查看指定容器的信息:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker inspect web</span><br></pre></td></tr></table></figure>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">"Mounts": [</span><br><span class="line">           &#123;</span><br><span class="line">               <span class="attr">"Source"</span>: <span class="string">"/home/zhangyulong/rmovie_dev/gems"</span>,</span><br><span class="line">               <span class="attr">"Destination"</span>: <span class="string">"/srv/rorapps/gems"</span>,</span><br><span class="line">               <span class="attr">"Mode"</span>: <span class="string">""</span>,</span><br><span class="line">               <span class="attr">"RW"</span>: <span class="literal">true</span>,</span><br><span class="line">               <span class="attr">"Propagation"</span>: <span class="string">"rprivate"</span></span><br><span class="line">           &#125;</span><br><span class="line">       ],</span><br></pre></td></tr></table></figure>
+<h4 id="挂载一个本地主机文件作为数据卷"><a href="#挂载一个本地主机文件作为数据卷" class="headerlink" title="挂载一个本地主机文件作为数据卷"></a>挂载一个本地主机文件作为数据卷</h4><p>-v 标记也可以从主机挂载单个文件到容器中</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$docker</span> run --rm -it -v ~/.bash_history:/.bash_history ubuntu /bin/bash</span><br></pre></td></tr></table></figure>
+<p>这样就可以记录在容器输入过的命令了。</p>
+<h3 id="数据卷容器"><a href="#数据卷容器" class="headerlink" title="数据卷容器"></a>数据卷容器</h3><p>持续更新的数据需要在容器之间共享，最好创建数据卷容器</p>
+<p>创建 dbdata 数据卷容器</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run -d -v /dbdata --name dbdata training/postgres echo Data-only container for postgres</span><br></pre></td></tr></table></figure>
+<p>使用 –volumes-from 来挂载 dbdata 容器中的数据卷</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run -d --volumes-from dbdata --name db1 training/postgres</span><br></pre></td></tr></table></figure>
+<p>然后用 <code>docker inspect db1</code> 查看容器信息</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">&quot;Mounts&quot;: [</span><br><span class="line">       &#123;</span><br><span class="line">           &quot;Name&quot;: &quot;04d67060f52ffb5d7604d90f0e453f347dc7b002414a5c3283adf33be9a99d5c&quot;,</span><br><span class="line">           &quot;Source&quot;: &quot;/var/lib/docker/volumes/04d67060f52ffb5d7604d90f0e453f347dc7b002414a5c3283adf33be9a99d5c/_data&quot;,</span><br><span class="line">           &quot;Destination&quot;: &quot;/dbdata&quot;,</span><br><span class="line">           &quot;Driver&quot;: &quot;local&quot;,</span><br><span class="line">           &quot;Mode&quot;: &quot;&quot;,</span><br><span class="line">           &quot;RW&quot;: true,</span><br><span class="line">           &quot;Propagation&quot;: &quot;&quot;</span><br><span class="line">       &#125;</span><br><span class="line">   ],</span><br></pre></td></tr></table></figure>
+<p>使用 –volumes-from 参数所挂载数据卷的容器自己并不需要保持在运行状态</p>
+<h2 id="使用网络"><a href="#使用网络" class="headerlink" title="使用网络"></a>使用网络</h2><p>Docker 允许通过外部访问容器或容器互联的方式来提供网络服务。</p>
+<h3 id="外部访问容器"><a href="#外部访问容器" class="headerlink" title="外部访问容器"></a>外部访问容器</h3><p>使用 -P 标记时，Docker 会随机映射一个 <code>49000~49900</code> 的端口到内部容器开放的网络端口。<br>本地主机的 <code>49155</code> 被映射到了容器的 <code>5000</code> 端口。此时访问本机的 <code>49155</code> 端口即可访问容器内  <code>5000</code> 端口</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ docker run -d -P training/webapp python app.py</span><br><span class="line">$ docker ps -l</span><br><span class="line">CONTAINER ID  IMAGE                   COMMAND       CREATED        STATUS        PORTS                    NAMES</span><br><span class="line">bc533791f3f5  training/webapp:latest  python app.py 5 seconds ago  Up 2 seconds  0.0.0.0:49155-&gt;5000/tcp  nostalgic_morse</span><br></pre></td></tr></table></figure>
+<p>查看日志:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker logs -f condescending_goldwasser</span><br></pre></td></tr></table></figure>
+<h4 id="映射所有接口地址"><a href="#映射所有接口地址" class="headerlink" title="映射所有接口地址"></a>映射所有接口地址</h4><p>使用 <code>hostPort:containerPort</code> 格式本地的 5433 端口映射到容器的 5432 端口，可以执行:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run -it -p 5433:5432  --name rmovie_db_dev rmovie_db_dev:9.4</span><br></pre></td></tr></table></figure>
+<h4 id="映射到指定地址的指定端口"><a href="#映射到指定地址的指定端口" class="headerlink" title="映射到指定地址的指定端口"></a>映射到指定地址的指定端口</h4><p>可以使用 <code>ip:hostPort:containerPort</code>格式指定映射使用一个特定地址，比如 localhost 地址 127.0.0.1:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run -it -p 127.0.0.1:5433:5432  --name rmovie_db_dev rmovie_db_dev:9.4</span><br></pre></td></tr></table></figure>
+<h4 id="映射到指定地址的任意端口"><a href="#映射到指定地址的任意端口" class="headerlink" title="映射到指定地址的任意端口"></a>映射到指定地址的任意端口</h4><p>使用 ip::containerPort 绑定 localhost 的任意端口到容器的 5000 端口，本地主机会自动分配一个端口。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run -it -p 127.0.0.1::5432  --name rmovie_db_dev rmovie_db_dev:9.4</span><br></pre></td></tr></table></figure>
+<p>还可以使用 udp 标记来指定 udp 端口:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker run -d -p 127.0.0.1:5000:5000/udp training/webapp python app.py</span><br></pre></td></tr></table></figure>
+<h5 id="查看端口映射"><a href="#查看端口映射" class="headerlink" title="查看端口映射"></a>查看端口映射</h5><p>docker port 来查看当前映射的端口配置:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"> docker port condescending_goldwasser 5432</span><br><span class="line">0.0.0.0:5433</span><br></pre></td></tr></table></figure>
+<ul>
+<li>容器有自己的内部网络和 ip 地址（使用 <code>docker inspect</code> 可以获取所有的变量，Docker 还可以有一个可变的网络配置。）</li>
+<li><code>-p</code> 标记可以多次使用来绑定多个端口</li>
+</ul>
+<h3 id="容器互联"><a href="#容器互联" class="headerlink" title="容器互联"></a>容器互联</h3><ul>
+<li>容器的连接（linking）系统是除了端口映射外，另一种跟容器中应用交互的方式。</li>
+<li>该系统会在源和接收容器之间创建一个隧道，接收容器可以看到源容器指定的信息。</li>
+</ul>
+<h4 id="自定义容器命名"><a href="#自定义容器命名" class="headerlink" title="自定义容器命名"></a>自定义容器命名</h4><p><code>--name</code> 标记可以为容器自定义命名:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run -itd -p 5433:5432  --name rmovie_db_dev rmovie_db_dev:9.4</span><br></pre></td></tr></table></figure>
+<p>docker inspect 来查看容器的名字:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker inspect -f <span class="string">"&#123;&#123; .Name &#125;&#125;"</span> aed84ee21bde</span><br></pre></td></tr></table></figure>
+<p>创建一个数据容器，通过 -v 制定主机目录挂载到:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run  -v /home/zhangyulong/pgdata:/data --name dbdata postgres:9.4 <span class="built_in">echo</span> <span class="string">"Data-only container for postgres"</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li>容器的名称是唯一的</li>
+<li>在执行 docker run 的时候如果添加 –rm 标记，则容器在终止后会立刻删除</li>
+<li>注意，–rm 和 -d 参数不能同时使用。</li>
+</ul>
+<h4 id="容器互联-1"><a href="#容器互联-1" class="headerlink" title="容器互联"></a>容器互联</h4><h3 id="常用命令"><a href="#常用命令" class="headerlink" title="常用命令"></a>常用命令</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">docker rmi $(docker images -q -f <span class="string">"dangling=true"</span>)</span><br><span class="line">docker rm $(docker ps -a -q)</span><br></pre></td></tr></table></figure>
+  </article>
+  <aside class="table-content" id="site-toc">
+  <div class="table-content-title">
+    <i class="fa fa-arrow-right fa-lg" id="site-toc-hide-btn"></i>
+    <span>目录</span>
+  </div>
+  <div class="table-content-main">
+    <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#用户权限"><span class="toc-text">用户权限</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#镜像"><span class="toc-text">镜像</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#容器"><span class="toc-text">容器</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#进入容器"><span class="toc-text">进入容器</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#导出容器"><span class="toc-text">导出容器</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#导入容器"><span class="toc-text">导入容器</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#清除容器"><span class="toc-text">清除容器</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#删除容器"><span class="toc-text">删除容器</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#网络配置"><span class="toc-text">网络配置</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#网络端口映射"><span class="toc-text">网络端口映射</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#仓库"><span class="toc-text">仓库</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#登录"><span class="toc-text">登录</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#基本操作"><span class="toc-text">基本操作</span></a></li></ol></li></ol><li class="toc-item toc-level-2"><a class="toc-link" href="#数据管理"><span class="toc-text">数据管理</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#数据卷"><span class="toc-text">数据卷</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#删除数据卷"><span class="toc-text">删除数据卷</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#挂载一个主机目录作为数据卷"><span class="toc-text">挂载一个主机目录作为数据卷</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#查看数据卷的具体信息"><span class="toc-text">查看数据卷的具体信息</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#挂载一个本地主机文件作为数据卷"><span class="toc-text">挂载一个本地主机文件作为数据卷</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#数据卷容器"><span class="toc-text">数据卷容器</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#使用网络"><span class="toc-text">使用网络</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#外部访问容器"><span class="toc-text">外部访问容器</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#映射所有接口地址"><span class="toc-text">映射所有接口地址</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#映射到指定地址的指定端口"><span class="toc-text">映射到指定地址的指定端口</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#映射到指定地址的任意端口"><span class="toc-text">映射到指定地址的任意端口</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#查看端口映射"><span class="toc-text">查看端口映射</span></a></li></ol></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#容器互联"><span class="toc-text">容器互联</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#自定义容器命名"><span class="toc-text">自定义容器命名</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#容器互联-1"><span class="toc-text">容器互联</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#常用命令"><span class="toc-text">常用命令</span></a></li></ol>
+  </li></div>
+</aside>
+  
+    <aside class="passage-copyright">
+      <div>本文作者: 董沅鑫</div>
+      
+        <div>
+          原文链接: 
+          <a href target="_blank">http://blog.alshin.xyz/passages/2017-07-23-Docker 入门学习/</a>
+        </div>
+      
+      <div>
+        版权声明: 本博客所有文章除特别声明外, 均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> 许可协议. 转载请注明出处!
+      </div>
+    </aside>
+  
+  
+    <div class="passage-tags">
+     
+      <a href="/tags/Docker/"><i class="fa fa-tags"></i>Docker</a>
+    
+    </div>
+  
+</div>
+
+    </main>
+    
+      
+<div class="site-comment-contanier" data-plateform="leancloud">
+  
+    <p id="site-comment-info">
+      <i class="fa fa-spinner fa-spin"></i> 评论加载中
+    </p>
+    <div id="site-comment"></div>
+  
+</div>
+    
+    <div class="site-footer-wrapper">
+  <footer class="site-footer">
+    <div class="site-footer-info">
+      <i class="fa fa-clock-o"></i> 本站已稳定运行<span id="site-time"></span>
+    </div>
+    
+      <div class="site-footer-info">
+        <i class="fa fa-paw"></i> 您是本站第 <span id="site-count"></span> 位访客
+      </div>
+    
+    
+      <div class="site-footer-info">
+        <i class="fa fa-at"></i> Email: alshin@126.com
+      </div>
+    
+    <div class="site-footer-info">
+      <i class="fa fa-copyright"></i> 
+      2019 <a href="https://github.com/dongyuanxin/theme-ad/" target="_blank">Theme-AD</a>.
+      Created by <a href="https://godbmw.com/" target="_blank">GodBMW</a>.
+      All rights reserved.
+    </div>
+  </footer>
+</div>
+    <div id="site-layer" style="display:none;">
+  <div class="site-layer-content">
+    <div class="site-layer-header">
+      <span class="site-layer-header-title" id="site-layer-title"></span>
+      <i class="fa fa-close" id="site-layer-close"></i>
+    </div>
+    <div class="site-layer-body" id="site-layer-container">
+      <div class="site-layer-input" id="site-layer-search" style="display: none;">
+        <input type="text">
+        <i class="fa fa-search"></i>
+      </div>
+      <div class="site-layer-reward" id="site-layer-reward" style="display: none;">
+      </div>
+      <div id="site-layer-welcome" style="display:none;"></div>
+    </div>
+  </div>
+</div>
+    
+
+<div class="bottom-bar">
+  <div class="bottom-bar-left">
+    <a href="/passages/2017-09-29-logrotate 归档log/" data-enable="true">
+      <i class="fa fa-arrow-left"></i>
+    </a>
+    <a href="/passages/2017-07-18-Go包学习-net/" data-enable="true">
+      <i class="fa fa-arrow-right"></i>
+    </a>
+  </div>
+  <div class="bottom-bar-right">
+    <a href="javascript:void(0);" data-enable="true" id="site-toc-show-btn">
+      <i class="fa fa-bars"></i>
+    </a>
+    
+      <a href="#site-comment" data-enable="true">
+        <i class="fa fa-commenting"></i>
+      </a>
+    
+    <a href="javascript:void(0);" id="site-toggle-share-btn">
+      <i class="fa fa-share-alt"></i>
+    </a>
+    <a href="javascript:void(0);" id="site-reward">
+      <i class="fa fa-thumbs-up"></i>
+    </a>
+    <a href="javascript:void(0);" id="back-top-btn">
+      <i class="fa fa-chevron-up"></i>
+    </a>
+  </div>
+</div>
+    <div id="share-btn">
+  
+  
+  
+  
+  
+</div>
+    
+
+
+
+
+
+    
+  </body>
+</html>

@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html>
+  
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="utf-8">
+  <meta name="author" content="alshin">
+  
+  
+  <title>Go包学习-net | Hexo</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  
+    <meta name="keywords" content="Go,Go,">
+  
+
+  
+  <meta name="description" content="go net包提供可移植性的网络I/O接口，包括TCP/IP,UDP,域名解析和Unix域socket。">
+
+  
+
+  
+    <script src="//cdn.jsdelivr.net/npm/leancloud-storage@3.11.1/dist/av-min.js" async></script>
+  
+
+  
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML" async></script>
+  
+
+  
+    <script src="//unpkg.com/valine/dist/Valine.min.js" async></script>
+  
+
+  
+
+  <script>
+  // theme-ad's config script
+  // it can be used in every script
+  
+  window.AD_CONFIG = {
+    leancloud: {"appid":"h0CqfjVcnAIMWz4RSInoU7nG-gzGzoHsz","appkey":"oMHPr4FFN8UsdSAjQ6aF0XYY","comment":true,"count":true},
+    welcome: {"enable":false,"interval":30},
+    start_time: "2019-04-03",
+    passwords: ["7c9682053bd95fa77364a9a794236619bc3576bdccc187458e4b9d16f1a1e681", ],
+    is_post: true,
+    lock: false,
+    author: "alshin",
+    share: {"twitter":false,"facebook":false,"weibo":false,"qq":false,"wechat":false},
+    mathjax: true,
+    page_type: "",
+    root: "/"
+  };
+</script>
+
+  <script src="/vendor/sha256.min.js"></script>
+<script src="/js/auth.js"></script>
+<script src="/js/index.js"></script>
+<script src="/vendor/qrcode.min.js"></script>
+
+  
+    <link rel="icon" href="/images/favicon.ico">
+    <link rel="apple-touch-icon" href="/images/touch-icon.png">
+  
+
+  <link href="//netdna.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+
+  <link rel="stylesheet" href="/css/index.css">
+<link rel="stylesheet" href="/styles/components/highlight/highlight.css">
+
+  
+</head>
+  <body>
+    <header class="site-header">
+  <div class="site-header-brand">
+    
+    
+  </div>
+  <div class="site-header-right">
+    <nav class="site-header-navigation">
+      
+        <a href="/" target="_self">首页</a>
+      
+        <a href="/archives/" target="_self">归档</a>
+      
+        <a href="/categories/" target="_self">分类</a>
+      
+    </nav>
+    <div class="site-header-btn">
+      
+        <a href="https://github.com/yunshang/" target="_blank" id="site-github">
+          <i class="fa fa-github-alt"></i>
+        </a>
+      
+      <a href="javascript:void(0);" id="site-nav-btn">
+        <i class="fa fa-ellipsis-v"></i>
+      </a>
+    </div>
+  </div>
+</header>
+<nav class="table-content" id="site-nav">
+  <div class="table-content-title">
+    <span>导航</span>
+  </div>
+  <div class="table-content-main">
+    <ol class="toc">
+      
+        <li class="toc-item">
+          <a href="/" target="_self">
+            首页
+          </a>
+        </li>
+      
+        <li class="toc-item">
+          <a href="/archives/" target="_self">
+            归档
+          </a>
+        </li>
+      
+        <li class="toc-item">
+          <a href="/categories/" target="_self">
+            分类
+          </a>
+        </li>
+      
+    </ol>
+  </div>
+</nav>
+<div id="site-process"></div>
+    <main>
+      
+  <div class="passage">
+  <div class="passage-meta">
+    <span>
+      <i class="fa fa-calendar"></i>2017-07-18
+    </span>
+    
+      <span>
+        | <a href="/categories/Go/"><i class="fa fa-bookmark"></i>Go</a>
+      </span>
+    
+    
+      <span>
+        | <i class="fa fa-unlock-alt"></i>UNLOCK
+      </span>
+    
+  </div>
+  <h1 class="passage-title">
+    Go包学习-net
+  </h1>
+  
+  <article class="passage-article">
+    <p>虽然net包提供了底层网络的原语访问，但大多数用户只需要Dial,Listen 和 Accept 函数提供基本接口，和以及相关Conn和Listener接口。 crypto/tls包提供了一样的接口和类似的Dial和Listen函数。 </p>
+<h2 id><a href="#" class="headerlink" title></a><figure class="highlight plain"><figcaption><span>Interface ```</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">&gt; Interface类型代表一个网络接口（系统与网络的一个接点）。包含接口索引到名字的映射，也包含接口的设备信息。</span><br><span class="line"></span><br><span class="line">```go</span><br><span class="line">//type Flags uint</span><br><span class="line">const (</span><br><span class="line">    FlagUp           Flags = 1 &lt;&lt; iota // 接口在活动状态</span><br><span class="line">    FlagBroadcast                      // 接口支持广播</span><br><span class="line">    FlagLoopback                       // 接口是环回的</span><br><span class="line">    FlagPointToPoint                   // 接口是点对点的</span><br><span class="line">    FlagMulticast                      // 接口支持组播</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">type Interface struct &#123;</span><br><span class="line">    Index        int          // 索引，&gt;=1的整数</span><br><span class="line">    MTU          int          // 最大传输单元</span><br><span class="line">    Name         string       // 接口名，例如&quot;en0&quot;、&quot;lo0&quot;、&quot;eth0.100&quot;</span><br><span class="line">    HardwareAddr HardwareAddr // HardwareAddr类型代表一个硬件地址,IEEE MAC-48、EUI-48或EUI-64格式</span><br><span class="line">    Flags        Flags        // 接口的属性，例如FlagUp、FlagLoopback、FlagMulticast</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></h2><h3 id="-1"><a href="#-1" class="headerlink" title></a><figure class="highlight plain"><figcaption><span>(*Interface) Addrs```</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">&gt;Addrs方法返回返回指定接口的address。</span><br><span class="line"></span><br><span class="line">```go</span><br><span class="line">func (ifi *Interface) Addrs() ([]Addr, error)</span><br></pre></td></tr></table></figure></h3><h3 id="-2"><a href="#-2" class="headerlink" title></a><figure class="highlight plain"><figcaption><span>Interfaces ```</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">&gt;Interfaces返回该系统的网络接口列表。</span><br><span class="line"></span><br><span class="line">```go</span><br><span class="line">func Interfaces() ([]Interface, error)</span><br></pre></td></tr></table></figure></h3><h3 id="-3"><a href="#-3" class="headerlink" title></a><figure class="highlight plain"><figcaption><span>InterfaceAddrs```</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">&gt;InterfaceAddrs返回该系统的网络接口的地址列表。</span><br><span class="line"></span><br><span class="line">```go</span><br><span class="line">func InterfaceAddrs() ([]Addr, error)</span><br></pre></td></tr></table></figure></h3><h2 id="-4"><a href="#-4" class="headerlink" title></a><figure class="highlight plain"><figcaption><span>IP```</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">&gt;IP类型是代表单个IP地址的[]byte切片。本包的函数都可以接受4字节（IPv4）和16字节（IPv6）的切片作为输入。注意，IP地址是IPv4地址还是IPv6地址是语义上的属性，而不取决于切片的长度：16字节的切片也可以是IPv4地址。</span><br><span class="line"></span><br><span class="line">```go</span><br><span class="line">type IP []byte</span><br></pre></td></tr></table></figure></h2><h3 id="-5"><a href="#-5" class="headerlink" title></a><figure class="highlight plain"><figcaption><span>IPv4(a, b, c, d byte) IP```</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">&gt; ipv4返回一个ipv4地址格式（a.b.c.d)的地址，这是16-byte的</span><br><span class="line"></span><br><span class="line">### ```func ParseCIDR(s string) (IP, *IPNet, error)</span><br></pre></td></tr></table></figure></h3><blockquote>
+<p>ParseCIDR将字符串s解析成一个ip地址和子网掩码的结构体中，其中字符串格式必须是IP地址和子网掩码的字符串，如：”192.168.100.1/24”或”2001:DB8::/48“等。</p>
+</blockquote>
+<h3 id="-6"><a href="#-6" class="headerlink" title></a><figure class="highlight plain"><figcaption><span>(ip IP) Equal(x IP) bool```</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">&gt;判断两个ip地址是否相等，其中一个ipv4地址以及相同具有ipv6格式的相同的地址认为是相等的，返回true</span><br><span class="line"></span><br><span class="line">### ```func (ip IP) IsGlobalUnicast() bool</span><br></pre></td></tr></table></figure></h3><blockquote>
+<p>判断是否是全局单播地址</p>
+</blockquote>
+<h3 id="-7"><a href="#-7" class="headerlink" title></a><figure class="highlight plain"><figcaption><span>ParseIP```</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">&gt; ParseIP将s解析为IP地址，并返回该地址。如果s不是合法的IP地址文本表示，ParseIP会返回nil。字符串可以是小数点分隔的IPv4格式（如&quot;74.125.19.99&quot;）或IPv6格式（如&quot;2001:4860:0:2001::68&quot;）格式。</span><br><span class="line"></span><br><span class="line">```go</span><br><span class="line">package main</span><br><span class="line"></span><br><span class="line">import (</span><br><span class="line">	&quot;fmt&quot;</span><br><span class="line">	&quot;os&quot;</span><br><span class="line">	&quot;net&quot;</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">func main() &#123;</span><br><span class="line"></span><br><span class="line">	name := &quot;192.168.1.97&quot;</span><br><span class="line"></span><br><span class="line">	ip := net.ParseIP(name)</span><br><span class="line"></span><br><span class="line">	if ip == nil &#123;</span><br><span class="line">		fmt.Fprintf(os.Stderr, &quot;Err:无效的地址&quot;)</span><br><span class="line">		return</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	fmt.Fprintf(os.Stdout, &quot;IP: %s %s\n&quot;, ip, ip.String())</span><br><span class="line">	defaultMask := ip.DefaultMask() //函数返回IP地址ip的默认子网掩码。只有IPv4有默认子网掩码；如果ip不是合法的IPv4地址，会返回nil。</span><br><span class="line">	fmt.Fprintf(os.Stdout, &quot;DefaultMask: %s %s\n&quot;, defaultMask, defaultMask.String())</span><br><span class="line"></span><br><span class="line">	ones, bits := defaultMask.Size()</span><br><span class="line">	fmt.Fprintf(os.Stdout, &quot;ones: %d bits: %d\n&quot;, ones, bits)</span><br><span class="line"></span><br><span class="line">    mask := ip.DefaultMask()</span><br><span class="line">	network := ip.Mask(mask)</span><br><span class="line">	fmt.Fprintf(os.Stdout, &quot;network: %s&quot;, network.String()) // 192.168.1.0</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// result </span><br><span class="line">IP: 192.168.1.97 192.168.1.97</span><br><span class="line">DefaultMask: ffffff00 ffffff00</span><br><span class="line">ones: 24 bits: 32</span><br><span class="line">network: 192.168.1.0%</span><br></pre></td></tr></table></figure></h3><h2 id="-8"><a href="#-8" class="headerlink" title></a><figure class="highlight plain"><figcaption><span>Dialer```</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">&gt; Dialer类型包含与某个地址建立连接时的参数。每一个字段的零值都等价于没有该字段。因此调用Dialer零值的Dial方法等价于调用Dial函数。</span><br><span class="line"></span><br><span class="line">```go</span><br><span class="line">type Dialer struct &#123;</span><br><span class="line">    // Timeout是dial操作等待连接建立的最大时长，默认值代表没有超时。</span><br><span class="line">    // 如果Deadline字段也被设置了，dial操作也可能更早失败。</span><br><span class="line">    // 不管有没有设置超时，操作系统都可能强制执行它的超时设置。</span><br><span class="line">    // 例如，TCP（系统）超时一般在3分钟左右。</span><br><span class="line">    Timeout time.Duration</span><br><span class="line">    // Deadline是一个具体的时间点期限，超过该期限后，dial操作就会失败。</span><br><span class="line">    // 如果Timeout字段也被设置了，dial操作也可能更早失败。</span><br><span class="line">    // 零值表示没有期限，即遵守操作系统的超时设置。</span><br><span class="line">    Deadline time.Time</span><br><span class="line">    // LocalAddr是dial一个地址时使用的本地地址。</span><br><span class="line">    // 该地址必须是与dial的网络相容的类型。</span><br><span class="line">    // 如果为nil，将会自动选择一个本地地址。</span><br><span class="line">    LocalAddr Addr</span><br><span class="line">    // DualStack允许单次dial操作在网络类型为&quot;tcp&quot;，</span><br><span class="line">    // 且目的地是一个主机名的DNS记录具有多个地址时，</span><br><span class="line">    // 尝试建立多个IPv4和IPv6连接，并返回第一个建立的连接。</span><br><span class="line">    DualStack bool</span><br><span class="line">    // KeepAlive指定一个活动的网络连接的生命周期；如果为0，会禁止keep-alive。</span><br><span class="line">    // 不支持keep-alive的网络连接会忽略本字段。</span><br><span class="line">    KeepAlive time.Duration</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></h2><h2 id="-9"><a href="#-9" class="headerlink" title></a><figure class="highlight plain"><figcaption><span>Listener```</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">&gt;Listener是一个用于面向流的网络协议的公用的网络监听器接口。多个线程可能会同时调用一个Listener的方法。</span><br><span class="line"></span><br><span class="line">```go</span><br><span class="line">type Listener interface &#123;</span><br><span class="line">    // Addr返回该接口的网络地址</span><br><span class="line">    Addr() Addr</span><br><span class="line">    // Accept等待并返回下一个连接到该接口的连接</span><br><span class="line">    Accept() (c Conn, err error)</span><br><span class="line">    // Close关闭该接口，并使任何阻塞的Accept操作都会不再阻塞并返回错误。</span><br><span class="line">    Close() error</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></h2><h3 id="-10"><a href="#-10" class="headerlink" title></a><figure class="highlight plain"><figcaption><span>FileListener(f *os.File) (l Listener, err error)```</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">&gt; 返回对于文件f的网络listener的复制。</span><br><span class="line"></span><br><span class="line">### ```func Listen(net, laddr string) (Listener, error)</span><br></pre></td></tr></table></figure></h3><blockquote>
+<p>返回在一个本地网络地址laddr上监听的Listener。网络类型参数net必须是面向流的网络：”tcp”、”tcp4”、”tcp6”、”unix”或”unixpacket”。</p>
+</blockquote>
+<h2 id="Dial函数和服务器建立连接"><a href="#Dial函数和服务器建立连接" class="headerlink" title="Dial函数和服务器建立连接:"></a>Dial函数和服务器建立连接:</h2><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//server.go</span></span><br><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> (</span><br><span class="line">    <span class="string">"fmt"</span></span><br><span class="line">    <span class="string">"log"</span></span><br><span class="line">    <span class="string">"net"</span></span><br><span class="line">    <span class="string">"bufio"</span></span><br><span class="line">)</span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">handleConnection</span><span class="params">(conn net.Conn)</span></span> &#123;</span><br><span class="line">    data, err := bufio.NewReader(conn).ReadString(<span class="string">'\n'</span>)</span><br><span class="line">    <span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">        log.Fatal(<span class="string">"get client data error: "</span>, err)</span><br><span class="line">    &#125;</span><br><span class="line">    fmt.Printf(<span class="string">"%#v\n"</span>, data)</span><br><span class="line">    fmt.Fprintf(conn, <span class="string">"hello client\n"</span>)</span><br><span class="line">    conn.Close()</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">  ln, err := net.Listen(<span class="string">"tcp"</span>, <span class="string">"127.0.0.1:1080"</span>)</span><br><span class="line">    <span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">        <span class="built_in">panic</span>(err)</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">for</span> &#123;</span><br><span class="line">        conn, err := ln.Accept()</span><br><span class="line">        <span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">            log.Fatal(<span class="string">"get client connection error: "</span>, err)</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">go</span> handleConnection(conn)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//client.go</span></span><br><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> (</span><br><span class="line">  <span class="string">"net"</span></span><br><span class="line">  <span class="string">"bufio"</span></span><br><span class="line">  <span class="string">"fmt"</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">  conn, err := net.Dial(<span class="string">"tcp"</span>, <span class="string">"127.0.0.1:1080"</span>)</span><br><span class="line">  <span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">    <span class="built_in">panic</span>(err)</span><br><span class="line">  &#125;</span><br><span class="line">  fmt.Fprintf(conn, <span class="string">"hello server\n"</span>)</span><br><span class="line">  data, err := bufio.NewReader(conn).ReadString(<span class="string">'\n'</span>)</span><br><span class="line">  <span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">    <span class="built_in">panic</span>(err)</span><br><span class="line">  &#125;</span><br><span class="line">  fmt.Printf(<span class="string">"%#v\n"</span>, data)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$ run server.go</span><br><span class="line"> <span class="string">"hello server\n"</span></span><br><span class="line"></span><br><span class="line">$ run client.go</span><br><span class="line"><span class="string">"hello client\n"</span></span><br></pre></td></tr></table></figure>
+<h2 id="-11"><a href="#-11" class="headerlink" title></a><figure class="highlight plain"><figcaption><span>IPAddr```</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">&gt; IPAddr代表一个IP终端的地址。</span><br><span class="line"></span><br><span class="line">## ```func ResolveIPAddr</span><br></pre></td></tr></table></figure></h2><blockquote>
+<p>ResolveIPAddr将addr作为一个格式为”host”或”ipv6-host%zone”的IP地址来解析。 函数会在参数net指定的网络类型上解析，net必须是”ip”、”ip4”或”ip6”。</p>
+</blockquote>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//func ResolveIPAddr(net, addr string) (*IPAddr, error)</span></span><br><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> (</span><br><span class="line">	<span class="string">"net"</span></span><br><span class="line">	<span class="string">"fmt"</span></span><br><span class="line">	<span class="string">"os"</span></span><br><span class="line">	<span class="string">"io/ioutil"</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line"></span><br><span class="line">	url := <span class="string">"www.baidu.com:80"</span></span><br><span class="line"></span><br><span class="line">	pRemoteTCPAddr, err := net.ResolveTCPAddr(<span class="string">"tcp4"</span>, url)</span><br><span class="line"></span><br><span class="line">	<span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">		fmt.Fprintf(os.Stderr, <span class="string">"Error: %s"</span>, err.Error())</span><br><span class="line">		<span class="keyword">return</span></span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	pTCPConn, err := net.DialTCP(<span class="string">"tcp"</span>, <span class="literal">nil</span><span class="comment">/*pLocalTCPAddr*/</span>, pRemoteTCPAddr)</span><br><span class="line"></span><br><span class="line">	<span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">		fmt.Fprintf(os.Stderr, <span class="string">"Error: %s"</span>, err.Error())</span><br><span class="line">		<span class="keyword">return</span></span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">	n, err := pTCPConn.Write([]<span class="keyword">byte</span>(<span class="string">"HEAD / HTTP/1.0\r\n\r\n"</span>))</span><br><span class="line">	<span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">		fmt.Fprintf(os.Stderr, <span class="string">"Error: %s"</span>, err.Error())</span><br><span class="line">		<span class="keyword">return</span></span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">defer</span> pTCPConn.Close()</span><br><span class="line"></span><br><span class="line">	fmt.Fprintf(os.Stdout, <span class="string">"writed: %d\n"</span>, n)</span><br><span class="line"></span><br><span class="line">	buf, err := ioutil.ReadAll(pTCPConn)</span><br><span class="line">	r := <span class="built_in">len</span>(buf)</span><br><span class="line">	fmt.Fprintf(os.Stdout, <span class="keyword">string</span>(buf[:r]))</span><br><span class="line">	fmt.Fprintf(os.Stdout, <span class="string">"readed: %d\n"</span>, r)</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//result</span></span><br><span class="line">writed: <span class="number">19</span></span><br><span class="line">readed: <span class="number">0</span></span><br></pre></td></tr></table></figure>
+<h2 id="-12"><a href="#-12" class="headerlink" title></a><figure class="highlight plain"><figcaption><span>Error```</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">&gt; 实现了error接口中方法的结构体都实现了网络error</span><br><span class="line"></span><br><span class="line">```go</span><br><span class="line">type Error interface &#123;</span><br><span class="line">    error      //错误  </span><br><span class="line">    Timeout() bool   // Is the error a timeout? 该错误是时间超时错误吗？  </span><br><span class="line">    Temporary() bool // Is the error temporary? 这个错误是一个临时错误吗？  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></h2><h3 id="-13"><a href="#-13" class="headerlink" title></a><figure class="highlight plain"><figcaption><span>(e *AddrError) Error() string```</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">&gt; 错误</span><br><span class="line"></span><br><span class="line">### ```func (e *AddrError) Temporary() bool</span><br></pre></td></tr></table></figure></h3><blockquote>
+<p>错误是否是一个临时错误</p>
+</blockquote>
+<h3 id="func-e-AddrError-Timeout-bool"><a href="#func-e-AddrError-Timeout-bool" class="headerlink" title="func (e *AddrError) Timeout() bool"></a><code>func (e *AddrError) Timeout() bool</code></h3><blockquote>
+<p>错误是否是超时错误</p>
+</blockquote>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
+<li><a href="http://blog.csdn.net/chenbaoke/article/details/42782571" target="_blank" rel="noopener">http://blog.csdn.net/chenbaoke/article/details/42782571</a></li>
+<li><a href="http://blog.csdn.net/chenbaoke/article/details/42782521" target="_blank" rel="noopener">http://blog.csdn.net/chenbaoke/article/details/42782521</a></li>
+<li><a href="http://studygolang.com/articles/4186" target="_blank" rel="noopener">http://studygolang.com/articles/4186</a></li>
+</ul>
+  </article>
+  <aside class="table-content" id="site-toc">
+  <div class="table-content-title">
+    <i class="fa fa-arrow-right fa-lg" id="site-toc-hide-btn"></i>
+    <span>目录</span>
+  </div>
+  <div class="table-content-main">
+    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#"><span class="toc-text">Interface ```12345678910111213141516171819&gt; Interface类型代表一个网络接口（系统与网络的一个接点）。包含接口索引到名字的映射，也包含接口的设备信息。```go//type Flags uintconst (    FlagUp           Flags = 1 &lt;&lt; iota // 接口在活动状态    FlagBroadcast                      // 接口支持广播    FlagLoopback                       // 接口是环回的    FlagPointToPoint                   // 接口是点对点的    FlagMulticast                      // 接口支持组播)type Interface struct {    Index        int          // 索引，&gt;=1的整数    MTU          int          // 最大传输单元    Name         string       // 接口名，例如&quot;en0&quot;、&quot;lo0&quot;、&quot;eth0.100&quot;    HardwareAddr HardwareAddr // HardwareAddr类型代表一个硬件地址,IEEE MAC-48、EUI-48或EUI-64格式    Flags        Flags        // 接口的属性，例如FlagUp、FlagLoopback、FlagMulticast}</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#-1"><span class="toc-text">(*Interface) Addrs```12345&gt;Addrs方法返回返回指定接口的address。```gofunc (ifi *Interface) Addrs() ([]Addr, error)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#-2"><span class="toc-text">Interfaces ```12345&gt;Interfaces返回该系统的网络接口列表。```gofunc Interfaces() ([]Interface, error)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#-3"><span class="toc-text">InterfaceAddrs```12345&gt;InterfaceAddrs返回该系统的网络接口的地址列表。```gofunc InterfaceAddrs() ([]Addr, error)</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#-4"><span class="toc-text">IP```12345&gt;IP类型是代表单个IP地址的[]byte切片。本包的函数都可以接受4字节（IPv4）和16字节（IPv6）的切片作为输入。注意，IP地址是IPv4地址还是IPv6地址是语义上的属性，而不取决于切片的长度：16字节的切片也可以是IPv4地址。```gotype IP []byte</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#-5"><span class="toc-text">IPv4(a, b, c, d byte) IP```1234&gt; ipv4返回一个ipv4地址格式（a.b.c.d)的地址，这是16-byte的### ```func ParseCIDR(s string) (IP, *IPNet, error)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#-6"><span class="toc-text">(ip IP) Equal(x IP) bool```1234&gt;判断两个ip地址是否相等，其中一个ipv4地址以及相同具有ipv6格式的相同的地址认为是相等的，返回true### ```func (ip IP) IsGlobalUnicast() bool</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#-7"><span class="toc-text">ParseIP```12345678910111213141516171819202122232425262728293031323334353637383940&gt; ParseIP将s解析为IP地址，并返回该地址。如果s不是合法的IP地址文本表示，ParseIP会返回nil。字符串可以是小数点分隔的IPv4格式（如&quot;74.125.19.99&quot;）或IPv6格式（如&quot;2001:4860:0:2001::68&quot;）格式。```gopackage mainimport (	&quot;fmt&quot;	&quot;os&quot;	&quot;net&quot;)func main() {	name := &quot;192.168.1.97&quot;	ip := net.ParseIP(name)	if ip == nil {		fmt.Fprintf(os.Stderr, &quot;Err:无效的地址&quot;)		return	}	fmt.Fprintf(os.Stdout, &quot;IP: %s %s\n&quot;, ip, ip.String())	defaultMask := ip.DefaultMask() //函数返回IP地址ip的默认子网掩码。只有IPv4有默认子网掩码；如果ip不是合法的IPv4地址，会返回nil。	fmt.Fprintf(os.Stdout, &quot;DefaultMask: %s %s\n&quot;, defaultMask, defaultMask.String())	ones, bits := defaultMask.Size()	fmt.Fprintf(os.Stdout, &quot;ones: %d bits: %d\n&quot;, ones, bits)    mask := ip.DefaultMask()	network := ip.Mask(mask)	fmt.Fprintf(os.Stdout, &quot;network: %s&quot;, network.String()) // 192.168.1.0}// result IP: 192.168.1.97 192.168.1.97DefaultMask: ffffff00 ffffff00ones: 24 bits: 32network: 192.168.1.0%</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#-8"><span class="toc-text">Dialer```1234567891011121314151617181920212223242526&gt; Dialer类型包含与某个地址建立连接时的参数。每一个字段的零值都等价于没有该字段。因此调用Dialer零值的Dial方法等价于调用Dial函数。```gotype Dialer struct {    // Timeout是dial操作等待连接建立的最大时长，默认值代表没有超时。    // 如果Deadline字段也被设置了，dial操作也可能更早失败。    // 不管有没有设置超时，操作系统都可能强制执行它的超时设置。    // 例如，TCP（系统）超时一般在3分钟左右。    Timeout time.Duration    // Deadline是一个具体的时间点期限，超过该期限后，dial操作就会失败。    // 如果Timeout字段也被设置了，dial操作也可能更早失败。    // 零值表示没有期限，即遵守操作系统的超时设置。    Deadline time.Time    // LocalAddr是dial一个地址时使用的本地地址。    // 该地址必须是与dial的网络相容的类型。    // 如果为nil，将会自动选择一个本地地址。    LocalAddr Addr    // DualStack允许单次dial操作在网络类型为&quot;tcp&quot;，    // 且目的地是一个主机名的DNS记录具有多个地址时，    // 尝试建立多个IPv4和IPv6连接，并返回第一个建立的连接。    DualStack bool    // KeepAlive指定一个活动的网络连接的生命周期；如果为0，会禁止keep-alive。    // 不支持keep-alive的网络连接会忽略本字段。    KeepAlive time.Duration}</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#-9"><span class="toc-text">Listener```123456789101112&gt;Listener是一个用于面向流的网络协议的公用的网络监听器接口。多个线程可能会同时调用一个Listener的方法。```gotype Listener interface {    // Addr返回该接口的网络地址    Addr() Addr    // Accept等待并返回下一个连接到该接口的连接    Accept() (c Conn, err error)    // Close关闭该接口，并使任何阻塞的Accept操作都会不再阻塞并返回错误。    Close() error}</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#-10"><span class="toc-text">FileListener(f *os.File) (l Listener, err error)```1234&gt; 返回对于文件f的网络listener的复制。### ```func Listen(net, laddr string) (Listener, error)</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Dial函数和服务器建立连接"><span class="toc-text">Dial函数和服务器建立连接:</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#-11"><span class="toc-text">IPAddr```1234&gt; IPAddr代表一个IP终端的地址。## ```func ResolveIPAddr</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#-12"><span class="toc-text">Error```123456789&gt; 实现了error接口中方法的结构体都实现了网络error```gotype Error interface {    error      //错误      Timeout() bool   // Is the error a timeout? 该错误是时间超时错误吗？      Temporary() bool // Is the error temporary? 这个错误是一个临时错误吗？  }</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#-13"><span class="toc-text">(e *AddrError) Error() string```1234&gt; 错误### ```func (e *AddrError) Temporary() bool</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#func-e-AddrError-Timeout-bool"><span class="toc-text">func (e *AddrError) Timeout() bool</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#参考"><span class="toc-text">参考</span></a></li></ol>
+  </div>
+</aside>
+  
+    <aside class="passage-copyright">
+      <div>本文作者: 董沅鑫</div>
+      
+        <div>
+          原文链接: 
+          <a href target="_blank">http://blog.alshin.xyz/passages/2017-07-18-Go包学习-net/</a>
+        </div>
+      
+      <div>
+        版权声明: 本博客所有文章除特别声明外, 均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> 许可协议. 转载请注明出处!
+      </div>
+    </aside>
+  
+  
+    <div class="passage-tags">
+     
+      <a href="/tags/Go/"><i class="fa fa-tags"></i>Go</a>
+    
+    </div>
+  
+</div>
+
+    </main>
+    
+      
+<div class="site-comment-contanier" data-plateform="leancloud">
+  
+    <p id="site-comment-info">
+      <i class="fa fa-spinner fa-spin"></i> 评论加载中
+    </p>
+    <div id="site-comment"></div>
+  
+</div>
+    
+    <div class="site-footer-wrapper">
+  <footer class="site-footer">
+    <div class="site-footer-info">
+      <i class="fa fa-clock-o"></i> 本站已稳定运行<span id="site-time"></span>
+    </div>
+    
+      <div class="site-footer-info">
+        <i class="fa fa-paw"></i> 您是本站第 <span id="site-count"></span> 位访客
+      </div>
+    
+    
+      <div class="site-footer-info">
+        <i class="fa fa-at"></i> Email: alshin@126.com
+      </div>
+    
+    <div class="site-footer-info">
+      <i class="fa fa-copyright"></i> 
+      2019 <a href="https://github.com/dongyuanxin/theme-ad/" target="_blank">Theme-AD</a>.
+      Created by <a href="https://godbmw.com/" target="_blank">GodBMW</a>.
+      All rights reserved.
+    </div>
+  </footer>
+</div>
+    <div id="site-layer" style="display:none;">
+  <div class="site-layer-content">
+    <div class="site-layer-header">
+      <span class="site-layer-header-title" id="site-layer-title"></span>
+      <i class="fa fa-close" id="site-layer-close"></i>
+    </div>
+    <div class="site-layer-body" id="site-layer-container">
+      <div class="site-layer-input" id="site-layer-search" style="display: none;">
+        <input type="text">
+        <i class="fa fa-search"></i>
+      </div>
+      <div class="site-layer-reward" id="site-layer-reward" style="display: none;">
+      </div>
+      <div id="site-layer-welcome" style="display:none;"></div>
+    </div>
+  </div>
+</div>
+    
+
+<div class="bottom-bar">
+  <div class="bottom-bar-left">
+    <a href="/passages/2017-07-23-Docker 入门学习/" data-enable="true">
+      <i class="fa fa-arrow-left"></i>
+    </a>
+    <a href="/passages/2017-06-30-消失两年/" data-enable="true">
+      <i class="fa fa-arrow-right"></i>
+    </a>
+  </div>
+  <div class="bottom-bar-right">
+    <a href="javascript:void(0);" data-enable="true" id="site-toc-show-btn">
+      <i class="fa fa-bars"></i>
+    </a>
+    
+      <a href="#site-comment" data-enable="true">
+        <i class="fa fa-commenting"></i>
+      </a>
+    
+    <a href="javascript:void(0);" id="site-toggle-share-btn">
+      <i class="fa fa-share-alt"></i>
+    </a>
+    <a href="javascript:void(0);" id="site-reward">
+      <i class="fa fa-thumbs-up"></i>
+    </a>
+    <a href="javascript:void(0);" id="back-top-btn">
+      <i class="fa fa-chevron-up"></i>
+    </a>
+  </div>
+</div>
+    <div id="share-btn">
+  
+  
+  
+  
+  
+</div>
+    
+
+
+
+
+
+    
+  </body>
+</html>
