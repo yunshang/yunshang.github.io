@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>Ruby里的%Q, %q, %W, %w, %x, %r, %s, %i | Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="%Q  用于替代双引号的字符串. 当你需要在字符串里放入很多引号时候, 可以直接用下面方法而不需要在引号前逐个添加反斜杠 (\“)">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Ruby里的%Q, %q, %W, %w, %x, %r, %s, %i">
+<meta property="og:url" content="http://yoursite.com/2016/09/30/2016-09-30-%%E7%9A%84%E7%94%A8%E6%B3%95/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="%Q  用于替代双引号的字符串. 当你需要在字符串里放入很多引号时候, 可以直接用下面方法而不需要在引号前逐个添加反斜杠 (\“)">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2016-09-30T00:00:00.000Z">
+<meta property="article:modified_time" content="2019-04-03T12:09:43.000Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="记录">
+<meta name="twitter:card" content="summary">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  <link type="text/css" href="//netdna.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.css" rel="stylesheet">
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+<link rel="stylesheet" href="/css/scrollUp/image.css">
+
+  <!--[if lt IE 9]><script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7/html5shiv.min.js"></script><![endif]-->
+  
+<meta name="generator" content="Hexo 4.2.1"></head>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <div class="logo">
+        <img src="/logo.png" alt="Profile Picture">
+      </div>
+      <div id="title">Hexo</div>
+      
+       <ul class="my-socials">
+  
+  <li>
+  	<a href="github.com/yunshang" class="github" target="_blank">
+  		<i class="fa fa-github"></i>
+  	</a>
+  </li>
+  
+  <li>
+  	<a href="alshin" class="weibo" target="_blank">
+  		<i class="fa fa-weibo"></i>
+  	</a>
+  </li>
+  
+ 
+</ul>
+    </div>
+  </div>
+  <div id="header-inner" class="">
+    <nav id="main-nav">
+      <a id="main-nav-toggle" class="nav-icon"></a>
+      <!--
+        
+          
+            <a class="main-nav-link" href="/">首页</a>
+          
+            <a class="main-nav-link" href="/archives">归档</a>
+          
+            <a class="main-nav-link" href="/categories/life">生活</a>
+          
+        
+      -->
+    </nav>
+    <nav id="title-nav" style="display:none">
+      <a href="/">Hexo</a>
+      <img src="/logo.png" alt="Profile Picture">
+      <!--
+      <span id="title-nav-socials">
+        
+          <a href="github.com/yunshang" class="github" target="_blank">
+            <i class="fa fa-github"></i>
+          </a>
+        
+          <a href="alshin" class="weibo" target="_blank">
+            <i class="fa fa-weibo"></i>
+          </a>
+        
+       
+     </span>
+      -->
+    </nav>
+    <nav id="sub-nav">
+      
+      <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+    </nav>
+    <div id="search-form-wrap">
+      <form action="http://www.baidu.com/baidu" method="get" accept-charset="utf-8" class="search-form">
+        <input type="search" name="word" maxlength="20" class="search-form-input" placeholder="Search">
+        <input type="submit" value="" class="search-form-submit">
+        <input name=tn type=hidden value="bds">
+        <input name=cl type=hidden value="3">
+        <input name=ct type=hidden value="2097152">
+        <input type="hidden" name="si" value="yoursite.com">
+      </form>
+    </div>
+  </div>
+  <div class="site-nav" style="display: none;">
+    <ul>
+      
+      
+        <li><a href="/">首页</a></li>
+      
+        <li><a href="/archives">归档</a></li>
+      
+        <li><a href="/categories/life">生活</a></li>
+      
+      
+    </ul>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-2016-09-30-%的用法" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2016/09/30/2016-09-30-%25%E7%9A%84%E7%94%A8%E6%B3%95/" class="article-date">
+  <time datetime="2016-09-30T00:00:00.000Z" itemprop="datePublished">2016-09-30</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/Ruby/">Ruby</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Ruby里的%Q, %q, %W, %w, %x, %r, %s, %i
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <blockquote>
+<p>%Q</p>
+</blockquote>
+<h3 id="用于替代双引号的字符串-当你需要在字符串里放入很多引号时候-可以直接用下面方法而不需要在引号前逐个添加反斜杠-“"><a href="#用于替代双引号的字符串-当你需要在字符串里放入很多引号时候-可以直接用下面方法而不需要在引号前逐个添加反斜杠-“" class="headerlink" title="用于替代双引号的字符串. 当你需要在字符串里放入很多引号时候, 可以直接用下面方法而不需要在引号前逐个添加反斜杠 (\“)"></a>用于替代双引号的字符串. 当你需要在字符串里放入很多引号时候, 可以直接用下面方法而不需要在引号前逐个添加反斜杠 (\“)</h3><a id="more"></a>
+
+<pre><code class="ruby">&gt;&gt; %Q(Joe said: &quot;Frank said: &quot;#{what_frank_said}&quot;&quot;)
+=&gt; &quot;Joe said: &quot;Frank said: &quot;Hello!&quot;&quot;&quot;</code></pre>
+<h3 id="Q-…-，这个括号可以被非数字字母的符号或成对的符号代替。"><a href="#Q-…-，这个括号可以被非数字字母的符号或成对的符号代替。" class="headerlink" title="%Q(…)，这个括号可以被非数字字母的符号或成对的符号代替。"></a>%Q(…)，这个括号可以被非数字字母的符号或成对的符号代替。</h3><pre><code class="ruby">&gt;&gt; %Q(Joe said: &quot;Frank said: &quot;#{what_frank_said}&quot;&quot;)
+=&gt; &quot;Joe said: &quot;Frank said: &quot;Hello!&quot;&quot;&quot;</code></pre>
+<h3 id="你还可以这样"><a href="#你还可以这样" class="headerlink" title="你还可以这样"></a>你还可以这样</h3><pre><code class="ruby">&gt;&gt; %/Joe said: &quot;Frank said: &quot;#{what_frank_said}&quot;&quot;/
+=&gt; &quot;Joe said: &quot;Frank said: &quot;Hello!&quot;&quot;&quot;</code></pre>
+<blockquote>
+<p>%q</p>
+</blockquote>
+<h3 id="它的语法很像-Q-用于单引号字符串。但使用单引号不受表达式替换，转义序列影响。"><a href="#它的语法很像-Q-用于单引号字符串。但使用单引号不受表达式替换，转义序列影响。" class="headerlink" title="它的语法很像%Q, 用于单引号字符串。但使用单引号不受表达式替换，转义序列影响。"></a>它的语法很像%Q, 用于单引号字符串。但使用单引号不受表达式替换，转义序列影响。</h3><pre><code class="ruby">&gt;&gt; %q(Joe said: &#39;Frank said: &#39;#{what_frank_said} &#39; &#39;)
+=&gt; &quot;Joe said: &#39;Frank said: &#39;\#{what_frank_said} &#39; &#39;&quot;</code></pre>
+<blockquote>
+<p>%W </p>
+</blockquote>
+<h3 id="别使用与数组里面的双引号。用法和-Q类似。"><a href="#别使用与数组里面的双引号。用法和-Q类似。" class="headerlink" title="别使用与数组里面的双引号。用法和%Q类似。"></a>别使用与数组里面的双引号。用法和%Q类似。</h3><pre><code class="ruby">&gt;&gt; %W(#{foo} Bar Bar\ with\ space)
+=&gt; [&quot;Foo&quot;, &quot;Bar&quot;, &quot;Bar with space&quot;]</code></pre>
+<blockquote>
+<p>%w</p>
+</blockquote>
+<h3 id="用于表示其中元素被单引号括起的数组。"><a href="#用于表示其中元素被单引号括起的数组。" class="headerlink" title="用于表示其中元素被单引号括起的数组。"></a>用于表示其中元素被单引号括起的数组。</h3><pre><code class="ruby">&gt;&gt; %w(#{foo} Bar Bar\ with\ space)
+=&gt; [&quot;\#{foo}&quot;, &quot;Bar&quot;, &quot;Bar with space&quot;]</code></pre>
+<blockquote>
+<p>%x</p>
+</blockquote>
+<h3 id="使用-方法执行一段shell脚本并返回标准输出内容。"><a href="#使用-方法执行一段shell脚本并返回标准输出内容。" class="headerlink" title="使用`方法执行一段shell脚本并返回标准输出内容。"></a>使用`方法执行一段shell脚本并返回标准输出内容。</h3><pre><code class="ruby">&gt;&gt; %x(echo foo:#{foo})
+=&gt; &quot;foo:Foo\n&quot;  </code></pre>
+<blockquote>
+<p>%r</p>
+</blockquote>
+<h3 id="语法近似于-Q-用于正则表达式"><a href="#语法近似于-Q-用于正则表达式" class="headerlink" title="语法近似于%Q, 用于正则表达式."></a>语法近似于%Q, 用于正则表达式.</h3><pre><code class="ruby">&gt;&gt; %r(/home/#{foo})
+ =&gt; &quot;/\\/home\\/Foo/&quot;   </code></pre>
+<blockquote>
+<p>%s </p>
+</blockquote>
+<h3 id="用于表示symbol-但是不会对其中表达式等内容进行转化。"><a href="#用于表示symbol-但是不会对其中表达式等内容进行转化。" class="headerlink" title="用于表示symbol, 但是不会对其中表达式等内容进行转化。"></a>用于表示symbol, 但是不会对其中表达式等内容进行转化。</h3><pre><code class="ruby">&gt;&gt; %s(foo)
+=&gt; :foo
+&gt;&gt; %s(foo bar)
+=&gt; :&quot;foo bar&quot;
+&gt;&gt; %s(#{foo} bar)
+=&gt; :&quot;\#{foo} bar&quot;</code></pre>
+<blockquote>
+<p>%i</p>
+</blockquote>
+<h3 id="Ruby-2-0-之后引入的语法-用于生成一个symbol数组"><a href="#Ruby-2-0-之后引入的语法-用于生成一个symbol数组" class="headerlink" title="Ruby 2.0 之后引入的语法, 用于生成一个symbol数组"></a>Ruby 2.0 之后引入的语法, 用于生成一个symbol数组</h3><pre><code class="ruby">2.0.0p247 :014 &gt; %i(a b c)
+=&gt; [:a, :b, :c] </code></pre>
+
+      
+    </div>
+    <footer class="article-footer">
+      
+        <a data-url="http://yoursite.com/2016/09/30/2016-09-30-%%E7%9A%84%E7%94%A8%E6%B3%95/" data-id="ckcgguxt7000v09qmc4bed7j7" class="article-share-link">Share</a>
+      
+
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E8%AE%B0%E5%BD%95/" rel="tag">记录</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2016/11/06/2016-11-06-%E6%9D%82/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          杂绪
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2016/09/17/2016-09-17-oauth2%20on%20rails/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">Oauth2 on Rails</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2020 John Doe<br>
+      Theme <a href="https://github.com/henryhuang/oishi" target="_blank">Oishi</a>, Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <!--
+      <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">首页</a>
+  
+    <a href="/archives" class="mobile-nav-link">归档</a>
+  
+    <a href="/categories/life" class="mobile-nav-link">生活</a>
+  
+</nav>
+    -->
+    
+
+<!-- 百度分享 start -->
+
+<!-- 百度分享 end -->
+
+<script src="//cdn.bootcss.com/jquery/1.11.1/jquery.min.js"></script>
+
+
+
+
+<script src="/js/jquery.scrollUp.min.js"></script>
+
+
+<script src="/js/jquery.transform.js"></script>
+
+
+<script src="/js/menu.js"></script>
+
+
+
+<script src="/js/script.js"></script>
+
+
+<script src="/js/scrollUp.js"></script>
+
+
+  </div>
+</body>
+</html>

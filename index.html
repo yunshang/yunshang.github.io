@@ -1,0 +1,798 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta property="og:type" content="website">
+<meta property="og:title" content="Hexo">
+<meta property="og:url" content="http://yoursite.com/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:locale" content="en_US">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  <link type="text/css" href="//netdna.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.css" rel="stylesheet">
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+<link rel="stylesheet" href="/css/scrollUp/image.css">
+
+  <!--[if lt IE 9]><script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7/html5shiv.min.js"></script><![endif]-->
+  
+<meta name="generator" content="Hexo 4.2.1"></head>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <div class="logo">
+        <img src="/logo.png" alt="Profile Picture">
+      </div>
+      <div id="title">Hexo</div>
+      
+       <ul class="my-socials">
+  
+  <li>
+  	<a href="github.com/yunshang" class="github" target="_blank">
+  		<i class="fa fa-github"></i>
+  	</a>
+  </li>
+  
+  <li>
+  	<a href="alshin" class="weibo" target="_blank">
+  		<i class="fa fa-weibo"></i>
+  	</a>
+  </li>
+  
+ 
+</ul>
+    </div>
+  </div>
+  <div id="header-inner" class="">
+    <nav id="main-nav">
+      <a id="main-nav-toggle" class="nav-icon"></a>
+      <!--
+        
+          
+            <a class="main-nav-link" href="/">首页</a>
+          
+            <a class="main-nav-link" href="/archives">归档</a>
+          
+            <a class="main-nav-link" href="/categories/life">生活</a>
+          
+        
+      -->
+    </nav>
+    <nav id="title-nav" style="display:none">
+      <a href="/">Hexo</a>
+      <img src="/logo.png" alt="Profile Picture">
+      <!--
+      <span id="title-nav-socials">
+        
+          <a href="github.com/yunshang" class="github" target="_blank">
+            <i class="fa fa-github"></i>
+          </a>
+        
+          <a href="alshin" class="weibo" target="_blank">
+            <i class="fa fa-weibo"></i>
+          </a>
+        
+       
+     </span>
+      -->
+    </nav>
+    <nav id="sub-nav">
+      
+      <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+    </nav>
+    <div id="search-form-wrap">
+      <form action="http://www.baidu.com/baidu" method="get" accept-charset="utf-8" class="search-form">
+        <input type="search" name="word" maxlength="20" class="search-form-input" placeholder="Search">
+        <input type="submit" value="" class="search-form-submit">
+        <input name=tn type=hidden value="bds">
+        <input name=cl type=hidden value="3">
+        <input name=ct type=hidden value="2097152">
+        <input type="hidden" name="si" value="yoursite.com">
+      </form>
+    </div>
+  </div>
+  <div class="site-nav" style="display: none;">
+    <ul>
+      
+      
+        <li><a href="/">首页</a></li>
+      
+        <li><a href="/archives">归档</a></li>
+      
+        <li><a href="/categories/life">生活</a></li>
+      
+      
+    </ul>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main">
+  
+
+    
+    <article id="post-go-mod-hello-world" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/07/08/go-mod-hello-world/" class="article-date">
+  <time datetime="2020-07-08T07:44:42.000Z" itemprop="datePublished">2020-07-08</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/07/08/go-mod-hello-world/">go mod hello world</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <blockquote>
+<p>golang 从1.11开始引入了go mod机制管理依赖包，本文对go mod简单hello world了一下。由于不同版本go mod有所差异，我使用的go环境是1.13版本的。</p>
+</blockquote>
+<p>建立hellogomod文件夹初始化go mod:</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">go</span> mod init</span><br><span class="line"></span><br><span class="line">cat <span class="keyword">go</span>.mod</span><br><span class="line">module hellogomod</span><br><span class="line"></span><br><span class="line"><span class="keyword">go</span> <span class="number">1.13</span></span><br></pre></td></tr></table></figure>
+
+<p>将以下内容保存为main.go：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> (</span><br><span class="line">    log <span class="string">"github.com/sirupsen/logrus"</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">    log.WithFields(log.Fields&#123;</span><br><span class="line">        <span class="string">"limao"</span>: <span class="string">"go mod try"</span>,</span><br><span class="line">    &#125;).Info(<span class="string">"Hello world!"</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>更新go mod：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">go</span> mod tidy</span><br><span class="line"></span><br><span class="line">cat <span class="keyword">go</span>.mod</span><br><span class="line">module hellogomod</span><br><span class="line"></span><br><span class="line"><span class="keyword">go</span> <span class="number">1.13</span></span><br><span class="line"></span><br><span class="line">require github.com/sirupsen/logrus v1<span class="number">.4</span><span class="number">.2</span></span><br></pre></td></tr></table></figure>
+
+<p>将vender文件cache到本目录：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">go mod vendor</span><br><span class="line"></span><br><span class="line">ll vendor</span><br><span class="line">total 8</span><br><span class="line">drwxr-xr-x  4 limao  staff   128B 12 31 10:14 github.com</span><br><span class="line">drwxr-xr-x  3 limao  staff    96B 12 31 10:14 golang.org</span><br><span class="line">-rw-r--r--  1 limao  staff   250B 12 31 10:14 modules.txt</span><br></pre></td></tr></table></figure>
+
+<p>编译时使用vender：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">go</span> build -mod=vendor main.<span class="keyword">go</span></span><br></pre></td></tr></table></figure>
+      
+    </div>
+    <footer class="article-footer">
+      
+        <a data-url="http://yoursite.com/2020/07/08/go-mod-hello-world/" data-id="ckcgguxx3003109qm7dfhfuki" class="article-share-link">Share</a>
+      
+
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+    
+  
+
+    
+    <article id="post-2019-05-30-贾想2感想" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/05/30/2019-05-30-%E8%B4%BE%E6%83%B32%E6%84%9F%E6%83%B3/" class="article-date">
+  <time datetime="2019-05-30T00:00:00.000Z" itemprop="datePublished">2019-05-30</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E9%9A%8F%E7%AC%94/">随笔</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/05/30/2019-05-30-%E8%B4%BE%E6%83%B32%E6%84%9F%E6%83%B3/">生活片段的贾想</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <blockquote>
+<p>年少爱追梦，对外面世界的全部寄托只能通过电影，音乐来维持幻想。贾樟柯是所有导演中最特殊的，破败、荒芜的县城;无所事事的青年;时代发展催化下城市百废具兴的改造。这样对一个同样县城出走人有强烈的认同感。</p>
+</blockquote>
+<p>好的电影所以触动人，是因为他不能抹去，它慢慢的溶于生活，让自己拥有人生重现的幻觉，这或者是电影的魅力所在吧。</p>
+<p>时常恍惚,自己又回到了那个不大不小的县城，有人像是喊着我的名字，我大街小巷不知疲倦跑着;被我撞倒在地，来不及道歉的姑娘；满桌的教辅和试卷，怎么做也没有尽头。觉得自己是那么独特的存在，与县城的生活秩序不符,觉得自己是注定要走出大山，这里不属于我。那时候根本不知道什么在不断远去，一个本该可以美好的时光，被我就这样生生的错过了，那些见证我成长过的东西正在往后隐去，往后逝去。现在能做的只有提醒我，不要忘记自己最珍贵的东西。<br>现在我逃出了县城，到了城市，年少时没有看清的理想，现在仍然一无所知。</p>
+<p>生活里偶尔会出现一团明亮而模糊的光影，如果投射在自己身上，这一抹温暖的底色我会理解成是生活的宽大的悲悯，给我的预兆；当它晒落在女孩绿色的裙角上，我错误的想象成了爱情，这明亮美好的东西是短暂，最终的结果都是会被现实的真向刺破。</p>
+<p>我想活一个人生的二愣子，只为热爱燃烧燃尽自己，不考虑我能走多远，但生活不允许自己作为旁观者，它高高在上的姿态，看着你愚蠢狼狈在尘埃前行。不是不选择，是我无法做其他选择。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      
+        <a data-url="http://yoursite.com/2019/05/30/2019-05-30-%E8%B4%BE%E6%83%B32%E6%84%9F%E6%83%B3/" data-id="ckcgguxxp003c09qmactr3hip" class="article-share-link">Share</a>
+      
+
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E9%9A%8F%E6%83%B3/" rel="tag">随想</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+    
+  
+
+    
+    <article id="post-2019-02-20-2019日常" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/02/20/2019-02-20-2019%E6%97%A5%E5%B8%B8/" class="article-date">
+  <time datetime="2019-02-20T00:00:00.000Z" itemprop="datePublished">2019-02-20</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E9%9A%8F%E7%AC%94/">随笔</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/02/20/2019-02-20-2019%E6%97%A5%E5%B8%B8/">2019日常</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <blockquote>
+<p>2018-02-20 </p>
+</blockquote>
+<ul>
+<li>抗拒自己的欲望，或者延迟满足欲望</li>
+<li>质疑貌似最可信的言论，不盲从任何人</li>
+<li>屏蔽流行信息，或者只在固定的时段接收流行信息</li>
+<li>思考最不可能的事，为其发展出可能性</li>
+<li>保留和发展自己的“怪癖”，并将其发展成自己的竞争力</li>
+<li>为小事物狂热，并在小事物中发现大世界</li>
+<li>开展思想实验和行动实验，让思想和行动相互激发</li>
+</ul>
+<blockquote>
+<p>2019-03-14<br>别人总问我为什么来这座城市，说出没结尾的故事没意义，只能苦笑说是梦的指引。</p>
+</blockquote>
+<blockquote>
+<p>2019-03-15<br>混乱无序的秩序，单方面可悲的勉强，低效的输入进展。是不到满身伤痕，是不会让我顿悟吗。</p>
+</blockquote>
+<blockquote>
+<p>2019-03-16<br>你所看到的,就是生活最合理的安排,不必忿忿不平,不用念念不忘,不需斤斤计较。</p>
+</blockquote>
+<blockquote>
+<p>你想伸手说出舍不得走，它却高傲的抬起了头，生活你永远猜不透，如若相逢无须问侯，就像多年失散的朋友</p>
+</blockquote>
+<blockquote>
+<p>但凡刻骨铭心，必定伤筋动骨。</p>
+</blockquote>
+<blockquote>
+<p>2019-03-19<br>邓宁·克鲁格效应说的是一种认知偏差现象，指的是能力欠缺的人在自己欠考虑的思考基础上得出错误结论，正如达尔文所说“无知比博学更容易带来自信。” 而当一个人开始学习新的知识，他原有的认知可能会被打破，这时候就陷入了绝望之谷。如果就此放弃，也可以在固有的思维和世界里打转，如果选择继续学习，将进入一个缓慢重新构建认知的过程，也就是开悟之坡，而这点滴知识与经验的累积会使你终将成为大师。</p>
+</blockquote>
+<blockquote>
+<p>2019-04-02<br>我选择坚持</p>
+</blockquote>
+<blockquote>
+<p>2019-04-03<br>难过</p>
+</blockquote>
+<blockquote>
+<p>2019-04-14<br>如果你足够勇敢说再见 生活就会奖励你一个新的开始</p>
+</blockquote>
+<blockquote>
+<p>2019-04-15<br>我喜欢你，你会感到困扰吗？</p>
+</blockquote>
+<blockquote>
+<p>2019-04-16<br>慢慢来，不能急躁，一口吃成胖子是不可能的。</p>
+</blockquote>
+<blockquote>
+<p>2019-04-17<br>真正会生活的人都会有两副面孔，一副面对世界，一副面对自己。</p>
+</blockquote>
+<blockquote>
+<p>2019-04-26<br>“我相信这个世界上一定会有一个你爱的人，他会穿过汹涌的人潮，笔直的走过田野、乡间和繁华的城市，然后拿着一颗用力跳动的心脏，捧着满腔的热血和沉甸甸的爱，走向你，抓紧你，去交换你的真心，他一定会找到你的，你一定要等下去啊！”</p>
+</blockquote>
+<blockquote>
+<p>2019-04-27<br>白茶清欢无别事,我在等风也等你。苦酒折柳今相离，无风无月也无你。</p>
+</blockquote>
+<blockquote>
+<p>2019-04-28<br>人间尽是荒唐，自己还得倾情出演</p>
+</blockquote>
+<blockquote>
+<p>2019-04-29<br>你看我这样的人,就像流浪在人间,好不容易找到了想要留下的旅店,可惜的是那家旅店唯一的房间已经有人了,我没有输,只是来晚了。</p>
+</blockquote>
+<blockquote>
+<p>2019-04-30<br>能走的远的人，一定具有虚怀若谷的特质。</p>
+</blockquote>
+<blockquote>
+<p>2019-05-03<br>百无一用是深情，不屑一顾最相思。</p>
+</blockquote>
+<blockquote>
+<p>2019-05-04<br>我要用,年轻的身体,去做很多有意义的事情</p>
+</blockquote>
+<blockquote>
+<p>2019-05-06<br>没有人会突然不爱你，只是你突然知道而已。</p>
+</blockquote>
+<blockquote>
+<p>2019-05-07<br>我悲哀的原因是，单调的生活，无趣的自己。</p>
+</blockquote>
+<blockquote>
+<p>2019-05-10<br>在现实面前，我们或许无数次被碾压的支离破碎，拼尽余生都在修修补补。但是有一天你会发现，人生正是在磨损，修复，重塑的过程中一次一次遇到那个全新的自己。</p>
+</blockquote>
+<blockquote>
+<p>2019-05-12<br>我们总是用大把时间迷茫，用几个瞬间成长。</p>
+</blockquote>
+
+      
+    </div>
+    <footer class="article-footer">
+      
+        <a data-url="http://yoursite.com/2019/02/20/2019-02-20-2019%E6%97%A5%E5%B8%B8/" data-id="ckcgguxxj003909qm9764b2dn" class="article-share-link">Share</a>
+      
+
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%80%9D%E8%80%83/" rel="tag">思考</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+    
+  
+
+    
+    <article id="post-2018-12-25-至灰时刻" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2018/12/25/2018-12-25-%E8%87%B3%E7%81%B0%E6%97%B6%E5%88%BB/" class="article-date">
+  <time datetime="2018-12-25T00:00:00.000Z" itemprop="datePublished">2018-12-25</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E9%9A%8F%E7%AC%94/">随笔</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2018/12/25/2018-12-25-%E8%87%B3%E7%81%B0%E6%97%B6%E5%88%BB/">至灰时刻</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <blockquote>
+<p>我想和自己坐下来好好谈谈，我不是绝望我是沉重，用自怨自艾的方式梳理年岁里又沉又重的情绪。</p>
+</blockquote>
+        
+          <p class="article-more-link">
+            <a href="/2018/12/25/2018-12-25-%E8%87%B3%E7%81%B0%E6%97%B6%E5%88%BB/#more">......</a>
+          </p>
+        
+      
+    </div>
+    <footer class="article-footer">
+      
+        <a data-url="http://yoursite.com/2018/12/25/2018-12-25-%E8%87%B3%E7%81%B0%E6%97%B6%E5%88%BB/" data-id="ckcgguxxd003409qm2w5ddtp8" class="article-share-link">Share</a>
+      
+
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%80%9D%E8%80%83/" rel="tag">思考</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+    
+  
+
+    
+    <article id="post-2018-04-11-「原则」礼记" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2018/04/11/2018-04-11-%E3%80%8C%E5%8E%9F%E5%88%99%E3%80%8D%E7%A4%BC%E8%AE%B0/" class="article-date">
+  <time datetime="2018-04-11T00:00:00.000Z" itemprop="datePublished">2018-04-11</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E9%9A%8F%E7%AC%94/">随笔</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2018/04/11/2018-04-11-%E3%80%8C%E5%8E%9F%E5%88%99%E3%80%8D%E7%A4%BC%E8%AE%B0/">「原则」札记</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p><a href="%E6%9D%A5%E6%BA%90%EF%BC%9Ahttps://book.douban.com/review/9128567/">来源：https://book.douban.com/review/9128567/</a></p>
+<h3 id="我的历程"><a href="#我的历程" class="headerlink" title="我的历程"></a>我的历程</h3><p>3p 在一生中，我们会做出无数的决定，这些决定实质上都是赌博，一些是大赌，一些是小赌。思考我们如何做出决定是有好处的，因为这将最终决定我们的生活质量。</p>
+        
+          <p class="article-more-link">
+            <a href="/2018/04/11/2018-04-11-%E3%80%8C%E5%8E%9F%E5%88%99%E3%80%8D%E7%A4%BC%E8%AE%B0/#more">......</a>
+          </p>
+        
+      
+    </div>
+    <footer class="article-footer">
+      
+        <a data-url="http://yoursite.com/2018/04/11/2018-04-11-%E3%80%8C%E5%8E%9F%E5%88%99%E3%80%8D%E7%A4%BC%E8%AE%B0/" data-id="ckcgguxwx002w09qm4505at07" class="article-share-link">Share</a>
+      
+
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%80%9D%E8%80%83/" rel="tag">思考</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+    
+  
+
+    
+    <article id="post-2018-01-07-2018日常" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2018/01/07/2018-01-07-2018%E6%97%A5%E5%B8%B8/" class="article-date">
+  <time datetime="2018-01-07T00:00:00.000Z" itemprop="datePublished">2018-01-07</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E9%9A%8F%E7%AC%94/">随笔</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2018/01/07/2018-01-07-2018%E6%97%A5%E5%B8%B8/">2018日常</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <blockquote>
+<p>2018-01-07 hello 2018</p>
+</blockquote>
+        
+          <p class="article-more-link">
+            <a href="/2018/01/07/2018-01-07-2018%E6%97%A5%E5%B8%B8/#more">......</a>
+          </p>
+        
+      
+    </div>
+    <footer class="article-footer">
+      
+        <a data-url="http://yoursite.com/2018/01/07/2018-01-07-2018%E6%97%A5%E5%B8%B8/" data-id="ckcgguxwk002m09qme1t389k7" class="article-share-link">Share</a>
+      
+
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%80%9D%E8%80%83/" rel="tag">思考</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+    
+  
+
+    
+    <article id="post-2018-01-07-Mac 技巧分享" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2018/01/07/2018-01-07-Mac%20%E6%8A%80%E5%B7%A7%E5%88%86%E4%BA%AB/" class="article-date">
+  <time datetime="2018-01-07T00:00:00.000Z" itemprop="datePublished">2018-01-07</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E4%B8%BB%E9%A2%98%E5%88%86%E4%BA%AB/">主题分享</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2018/01/07/2018-01-07-Mac%20%E6%8A%80%E5%B7%A7%E5%88%86%E4%BA%AB/">Mac 技巧分享</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="Mac-技巧-amp-工具"><a href="#Mac-技巧-amp-工具" class="headerlink" title="Mac 技巧&amp;工具"></a>Mac 技巧&amp;工具</h1><blockquote>
+<p>工欲善其事，必先利其器,工匠想要使他的工作做好，一定要先让工具锋利。比喻要做好一件事，准备工作非常重要。</p>
+</blockquote>
+        
+          <p class="article-more-link">
+            <a href="/2018/01/07/2018-01-07-Mac%20%E6%8A%80%E5%B7%A7%E5%88%86%E4%BA%AB/#more">......</a>
+          </p>
+        
+      
+    </div>
+    <footer class="article-footer">
+      
+        <a data-url="http://yoursite.com/2018/01/07/2018-01-07-Mac%20%E6%8A%80%E5%B7%A7%E5%88%86%E4%BA%AB/" data-id="ckcgguxy3003g09qm8jipdzac" class="article-share-link">Share</a>
+      
+
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%80%9D%E8%80%83/" rel="tag">思考</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+    
+  
+
+    
+    <article id="post-2018-01-02-一切都是那么糟" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2018/01/02/2018-01-02-%E4%B8%80%E5%88%87%E9%83%BD%E6%98%AF%E9%82%A3%E4%B9%88%E7%B3%9F/" class="article-date">
+  <time datetime="2018-01-02T00:00:00.000Z" itemprop="datePublished">2018-01-02</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E9%9A%8F%E7%AC%94/">随笔</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2018/01/02/2018-01-02-%E4%B8%80%E5%88%87%E9%83%BD%E6%98%AF%E9%82%A3%E4%B9%88%E7%B3%9F/">一切都是那么糟</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <blockquote>
+<p>过去的 2017 年，可能是我经历的人生中最多疑惑，糟糕的一年。工作的沉闷打击，生活的不如意，计划的破碎…，这一切深深扼止着我发声的念头，用沉默和隐忍来伪装着自己什么都不在乎，逃避着它们带来的伤害。</p>
+</blockquote>
+        
+          <p class="article-more-link">
+            <a href="/2018/01/02/2018-01-02-%E4%B8%80%E5%88%87%E9%83%BD%E6%98%AF%E9%82%A3%E4%B9%88%E7%B3%9F/#more">......</a>
+          </p>
+        
+      
+    </div>
+    <footer class="article-footer">
+      
+        <a data-url="http://yoursite.com/2018/01/02/2018-01-02-%E4%B8%80%E5%88%87%E9%83%BD%E6%98%AF%E9%82%A3%E4%B9%88%E7%B3%9F/" data-id="ckcgguxwu002t09qm1iu4f69l" class="article-share-link">Share</a>
+      
+
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%80%9D%E8%80%83/" rel="tag">思考</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+    
+  
+
+    
+    <article id="post-2017-12-18-Buffalo 框架出体验" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2017/12/18/2017-12-18-Buffalo%20%E6%A1%86%E6%9E%B6%E5%87%BA%E4%BD%93%E9%AA%8C/" class="article-date">
+  <time datetime="2017-12-18T00:00:00.000Z" itemprop="datePublished">2017-12-18</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/Go/">Go</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/12/18/2017-12-18-Buffalo%20%E6%A1%86%E6%9E%B6%E5%87%BA%E4%BD%93%E9%AA%8C/">Buffalo 框架初体验</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="Buffalo-框架"><a href="#Buffalo-框架" class="headerlink" title="Buffalo 框架"></a>Buffalo 框架</h1><blockquote>
+<p>Buffalo 是 web 生态系统. 它的设计简化了 Web 开发的复杂度.</p>
+</blockquote>
+        
+          <p class="article-more-link">
+            <a href="/2017/12/18/2017-12-18-Buffalo%20%E6%A1%86%E6%9E%B6%E5%87%BA%E4%BD%93%E9%AA%8C/#more">......</a>
+          </p>
+        
+      
+    </div>
+    <footer class="article-footer">
+      
+        <a data-url="http://yoursite.com/2017/12/18/2017-12-18-Buffalo%20%E6%A1%86%E6%9E%B6%E5%87%BA%E4%BD%93%E9%AA%8C/" data-id="ckcgguxw1002609qm8ujz9gva" class="article-share-link">Share</a>
+      
+
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Go/" rel="tag">Go</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+    
+  
+
+    
+    <article id="post-2017-12-3-Redis分享" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2017/12/03/2017-12-3-Redis%E5%88%86%E4%BA%AB/" class="article-date">
+  <time datetime="2017-12-03T00:00:00.000Z" itemprop="datePublished">2017-12-03</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/Redis/">Redis</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/12/03/2017-12-3-Redis%E5%88%86%E4%BA%AB/">Redis 分享</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="Redis-基础分享"><a href="#Redis-基础分享" class="headerlink" title="Redis 基础分享"></a>Redis 基础分享</h1><blockquote>
+<p>这次和大家分享的主要是 Redis 的数据结构和及其应用场景相关内容，希望对大家学习有所帮助。</p>
+</blockquote>
+        
+          <p class="article-more-link">
+            <a href="/2017/12/03/2017-12-3-Redis%E5%88%86%E4%BA%AB/#more">......</a>
+          </p>
+        
+      
+    </div>
+    <footer class="article-footer">
+      
+        <a data-url="http://yoursite.com/2017/12/03/2017-12-3-Redis%E5%88%86%E4%BA%AB/" data-id="ckcgguxwq002p09qm38fdbjjv" class="article-share-link">Share</a>
+      
+
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Redis/" rel="tag">Redis</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+    
+  
+  
+    <nav id="page-nav">
+      <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><a class="extend next" rel="next" href="/page/2/">Next</a>
+    </nav>
+  
+</section>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2020 John Doe<br>
+      Theme <a href="https://github.com/henryhuang/oishi" target="_blank">Oishi</a>, Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <!--
+      <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">首页</a>
+  
+    <a href="/archives" class="mobile-nav-link">归档</a>
+  
+    <a href="/categories/life" class="mobile-nav-link">生活</a>
+  
+</nav>
+    -->
+    
+
+<!-- 百度分享 start -->
+
+<!-- 百度分享 end -->
+
+<script src="//cdn.bootcss.com/jquery/1.11.1/jquery.min.js"></script>
+
+
+
+
+<script src="/js/jquery.scrollUp.min.js"></script>
+
+
+<script src="/js/jquery.transform.js"></script>
+
+
+<script src="/js/menu.js"></script>
+
+
+
+<script src="/js/script.js"></script>
+
+
+<script src="/js/scrollUp.js"></script>
+
+
+  </div>
+</body>
+</html>

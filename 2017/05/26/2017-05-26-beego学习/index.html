@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>beego学习 | Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="beego 一种MVC架构的web框架，网上评价:设计繁复。优点:简单，国人开人，文档，资料多。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="beego学习">
+<meta property="og:url" content="http://yoursite.com/2017/05/26/2017-05-26-beego%E5%AD%A6%E4%B9%A0/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="beego 一种MVC架构的web框架，网上评价:设计繁复。优点:简单，国人开人，文档，资料多。">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2017-05-26T00:00:00.000Z">
+<meta property="article:modified_time" content="2019-04-03T12:09:43.000Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="Go">
+<meta name="twitter:card" content="summary">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  <link type="text/css" href="//netdna.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.css" rel="stylesheet">
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+<link rel="stylesheet" href="/css/scrollUp/image.css">
+
+  <!--[if lt IE 9]><script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7/html5shiv.min.js"></script><![endif]-->
+  
+<meta name="generator" content="Hexo 4.2.1"></head>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <div class="logo">
+        <img src="/logo.png" alt="Profile Picture">
+      </div>
+      <div id="title">Hexo</div>
+      
+       <ul class="my-socials">
+  
+  <li>
+  	<a href="github.com/yunshang" class="github" target="_blank">
+  		<i class="fa fa-github"></i>
+  	</a>
+  </li>
+  
+  <li>
+  	<a href="alshin" class="weibo" target="_blank">
+  		<i class="fa fa-weibo"></i>
+  	</a>
+  </li>
+  
+ 
+</ul>
+    </div>
+  </div>
+  <div id="header-inner" class="">
+    <nav id="main-nav">
+      <a id="main-nav-toggle" class="nav-icon"></a>
+      <!--
+        
+          
+            <a class="main-nav-link" href="/">首页</a>
+          
+            <a class="main-nav-link" href="/archives">归档</a>
+          
+            <a class="main-nav-link" href="/categories/life">生活</a>
+          
+        
+      -->
+    </nav>
+    <nav id="title-nav" style="display:none">
+      <a href="/">Hexo</a>
+      <img src="/logo.png" alt="Profile Picture">
+      <!--
+      <span id="title-nav-socials">
+        
+          <a href="github.com/yunshang" class="github" target="_blank">
+            <i class="fa fa-github"></i>
+          </a>
+        
+          <a href="alshin" class="weibo" target="_blank">
+            <i class="fa fa-weibo"></i>
+          </a>
+        
+       
+     </span>
+      -->
+    </nav>
+    <nav id="sub-nav">
+      
+      <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+    </nav>
+    <div id="search-form-wrap">
+      <form action="http://www.baidu.com/baidu" method="get" accept-charset="utf-8" class="search-form">
+        <input type="search" name="word" maxlength="20" class="search-form-input" placeholder="Search">
+        <input type="submit" value="" class="search-form-submit">
+        <input name=tn type=hidden value="bds">
+        <input name=cl type=hidden value="3">
+        <input name=ct type=hidden value="2097152">
+        <input type="hidden" name="si" value="yoursite.com">
+      </form>
+    </div>
+  </div>
+  <div class="site-nav" style="display: none;">
+    <ul>
+      
+      
+        <li><a href="/">首页</a></li>
+      
+        <li><a href="/archives">归档</a></li>
+      
+        <li><a href="/categories/life">生活</a></li>
+      
+      
+    </ul>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-2017-05-26-beego学习" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2017/05/26/2017-05-26-beego%E5%AD%A6%E4%B9%A0/" class="article-date">
+  <time datetime="2017-05-26T00:00:00.000Z" itemprop="datePublished">2017-05-26</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/Go/">Go</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      beego学习
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <blockquote>
+<p>beego 一种MVC架构的web框架，网上评价:设计繁复。优点:简单，国人开人，文档，资料多。</p>
+</blockquote>
+<a id="more"></a>
+
+<h2 id="orm"><a href="#orm" class="headerlink" title="orm"></a>orm</h2><ul>
+<li><p>支持 Go 的所有类型存储</p>
+</li>
+<li><p>轻松上手，采用简单的 CRUD 风格</p>
+</li>
+<li><p>自动 Join 关联表</p>
+</li>
+<li><p>跨数据库兼容查询</p>
+</li>
+<li><p>允许直接使用 SQL 查询／映射</p>
+</li>
+<li><p>严格完整的测试保证 ORM 的稳定与健壮</p>
+</li>
+</ul>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">init</span><span class="params">()</span></span> &#123;</span><br><span class="line">  <span class="comment">// 注册数据库</span></span><br><span class="line">  orm.RegisterDataBase(<span class="string">"default"</span>, <span class="string">"mysql"</span>, <span class="string">"root:root@/my_db?charset=utf8"</span>, <span class="number">30</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment">// 创建数据库，第三个参数是是否检测数据库重复，报错</span></span><br><span class="line">  orm.RunSyncdb(<span class="string">"default"</span>, <span class="literal">false</span>, <span class="literal">true</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="ORM-接口使用"><a href="#ORM-接口使用" class="headerlink" title="ORM 接口使用"></a><a href="https://beego.me/docs/mvc/model/orm.md" target="_blank" rel="noopener">ORM 接口使用</a></h3><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">  <span class="keyword">var</span> o Ormer</span><br><span class="line">  o = orm.NewOrm() <span class="comment">// 创建一个 Ormer</span></span><br><span class="line">  <span class="comment">// NewOrm 的同时会执行 orm.BootStrap (整个 app 只执行一次)，用以验证模型之间的定义并缓存。</span></span><br><span class="line">  <span class="keyword">var</span> r RawSeter</span><br><span class="line">  r = o.Raw(<span class="string">"UPDATE user SET name = ? WHERE name = ?"</span>, <span class="string">"testing"</span>, <span class="string">"slene"</span>)</span><br><span class="line">  <span class="comment">// Raw 函数，返回一个 RawSeter 用以对设置的 sql 语句和参数进行操作</span></span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="context-模块"><a href="#context-模块" class="headerlink" title="context 模块"></a><a href="https://beego.me/docs/module/context.md" target="_blank" rel="noopener">context 模块</a></h2><blockquote>
+<p>上下文模块主要是针对 HTTP 请求中，request 和 response 的进一步封装，他包括用户的输入和输出，用户的输入即为 request，context 模块中提供了 Input 对象进行解析，用户的输出即为 response，context 模块中提供了 Output 对象进行输出。</p>
+</blockquote>
+<h2 id="golang-strconv包"><a href="#golang-strconv包" class="headerlink" title="golang strconv包"></a><a href="https://golang.org/pkg/strconv/" target="_blank" rel="noopener">golang strconv包</a></h2><blockquote>
+<p>strconv实现与基本数据类型的字符串表示形式的转换</p>
+</blockquote>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">  <span class="keyword">package</span> main  </span><br><span class="line"></span><br><span class="line">  <span class="keyword">import</span> (  </span><br><span class="line">      <span class="string">"fmt"</span>  </span><br><span class="line">      <span class="string">"strconv"</span>  </span><br><span class="line">  )  </span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;  </span><br><span class="line">      <span class="comment">// ParseBool 将字符串转换为布尔值</span></span><br><span class="line">      fmt.Println(strconv.ParseBool(<span class="string">"1"</span>))    <span class="comment">// true  </span></span><br><span class="line">      fmt.Println(strconv.ParseBool(<span class="string">"TRue"</span>))</span><br><span class="line">      <span class="comment">// false strconv.ParseBool: parsing "TRue": invalid syntax  </span></span><br><span class="line">      fmt.Println(strconv.ParseBool(<span class="string">"0"</span>))     <span class="comment">// false  </span></span><br><span class="line">      fmt.Println(strconv.ParseBool(<span class="string">"FALse"</span>))  </span><br><span class="line">      <span class="comment">// false strconv.ParseBool: parsing "FAlse": invalid syntax  </span></span><br><span class="line"></span><br><span class="line">      <span class="comment">// FormatBool 将布尔值转换为字符串 "true" 或 "false"</span></span><br><span class="line">      fmt.Println(strconv.FormatBool(<span class="number">0</span> &gt; <span class="number">1</span>)) <span class="comment">// false  </span></span><br><span class="line"></span><br><span class="line">      <span class="comment">// ParseInt 将字符串转换为 int 类型</span></span><br><span class="line">      <span class="comment">// Atoi 相当于 ParseInt(s, 10, 0)</span></span><br><span class="line">      <span class="comment">// 通常使用这个函数，而不使用 ParseIn</span></span><br><span class="line">      fmt.Println(strconv.Atoi(<span class="string">"2147483647"</span>))  </span><br><span class="line">      <span class="comment">// 2147483647  </span></span><br><span class="line">      fmt.Println(strconv.Atoi(<span class="string">"2147483648"</span>))  </span><br><span class="line">      <span class="comment">// 2147483647 strconv.ParseInt: parsing "2147483648": value out of range</span></span><br><span class="line"></span><br><span class="line">      <span class="comment">// ParseFloat 将字符串转换为浮点数</span></span><br><span class="line">      s := <span class="string">"0.12345678901234567890"</span>  </span><br><span class="line">      f, err := strconv.ParseFloat(s, <span class="number">32</span>)  </span><br><span class="line">      fmt.Println(f, err)          <span class="comment">// 0.12345679104328156  </span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="casbin"><a href="#casbin" class="headerlink" title="casbin"></a><a href="https://github.com/casbin/casbin" target="_blank" rel="noopener">casbin</a></h2><blockquote>
+<p>casbin是一个用Go语言打造的轻量级开源访问控制框架，casbin采用了元模型的设计思想，支持多种经典的访问控制方案，如基于角色的访问控制RBAC、基于属性的访问控制ABAC等。</p>
+</blockquote>
+<h3 id="casbin的主要特性包括"><a href="#casbin的主要特性包括" class="headerlink" title="casbin的主要特性包括"></a>casbin的主要特性包括</h3><ul>
+<li>支持自定义请求的格式，默认的请求格式为{subject, object, action}；</li>
+<li>具有访问控制模型model和策略policy两个核心概念；</li>
+<li>支持RBAC中的多层角色继承，不止主体可以有角色，资源也可以具有角色；</li>
+<li>支持超级用户，如root或Administrator，超级用户可以不受授权策略的约束访问任意资源；</li>
+<li>支持多种内置的操作符，如keyMatch，方便对路径式的资源进行管理，如/foo/<em>***ar可以映射到/foo</em>；</li>
+</ul>
+<h3 id="casbin不做的事情"><a href="#casbin不做的事情" class="headerlink" title="casbin不做的事情"></a>casbin不做的事情</h3><ul>
+<li><p>身份认证authentication（即验证用户的用户名、密码），casbin只负责访问控制。应该有其他专门的组件负责身份认证，然后由casbin进行访问控制，二者是相互配合的关系；</p>
+</li>
+<li><p>管理用户列表或角色列表。casbin认为由项目自身来管理用户、角色列表更为合适，casbin假设所有策略和请求中出现的用户、角色、资源都是合法有效的。</p>
+</li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      
+        <a data-url="http://yoursite.com/2017/05/26/2017-05-26-beego%E5%AD%A6%E4%B9%A0/" data-id="ckcgguxuw001y09qm8tjlc8yb" class="article-share-link">Share</a>
+      
+
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Go/" rel="tag">Go</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2017/06/30/2017-06-30-%E6%B6%88%E5%A4%B1%E4%B8%A4%E5%B9%B4/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          沉默两年
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2017/04/10/2017-04-10-SQL%E7%AC%94%E8%AE%B0/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">SQL笔记</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2020 John Doe<br>
+      Theme <a href="https://github.com/henryhuang/oishi" target="_blank">Oishi</a>, Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <!--
+      <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">首页</a>
+  
+    <a href="/archives" class="mobile-nav-link">归档</a>
+  
+    <a href="/categories/life" class="mobile-nav-link">生活</a>
+  
+</nav>
+    -->
+    
+
+<!-- 百度分享 start -->
+
+<!-- 百度分享 end -->
+
+<script src="//cdn.bootcss.com/jquery/1.11.1/jquery.min.js"></script>
+
+
+
+
+<script src="/js/jquery.scrollUp.min.js"></script>
+
+
+<script src="/js/jquery.transform.js"></script>
+
+
+<script src="/js/menu.js"></script>
+
+
+
+<script src="/js/script.js"></script>
+
+
+<script src="/js/scrollUp.js"></script>
+
+
+  </div>
+</body>
+</html>
