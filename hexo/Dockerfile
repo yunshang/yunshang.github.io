@@ -14,12 +14,15 @@ RUN \
   && npm install pngquant-bin -g \
   && hexo init . \
   && yarn install \
+  && yarn add gulp \
   && yarn add hexo-deployer-git \
-  && yarn add  hexo-wordcount \
-  && yarn add hexo-all-minifier \
-  && yarn add hexo-generator-feed \
-  && yarn add hexo-admin
-  
+  && yarn add  hexo-front-matter-excerpt \
+  && yarn add hexo-generator-archive \
+  && yarn add hexo-generator-tag \
+  && yarn add hexo-renderer-marked \
+  && yarn add hexo-renderer-stylus \
+  && yarn add hexo-renderer-stylus \
+  && yarn add hexo-server
 
 VOLUME ["/hexo/source", "/hexo/themes", "/root/.ssh"]
 

@@ -1,5 +1,7 @@
+# Header
 menu:
   首页: /
+  生活: /categories/life
   归档: /archives
 
 # Content
@@ -29,16 +31,3 @@ fb_app_id:
 
 # scrollUp 样式
 scrollUp: image
-social:
-  github: github.com/yunshang
-  weibo: alshin
-
-theme: oishi
-
-# Deployment
-## Docs: https://hexo.io/docs/deployment.html
-deploy:
-  type: git
-  repo: 
-    github: git@github.com:yunshang/yunshang.github.io.git,master
-    coding: git@git.dev.tencent.com:alshin/alshin.git,master
