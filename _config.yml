@@ -2,31 +2,37 @@
 ## Docs: https://hexo.io/docs/configuration.html
 ## Source: https://github.com/hexojs/hexo/
 
-# Site
-title: Hexo
-subtitle:
-description:
-keywords:
-author: alshin
-language:
-timezone:
+# blog config
+seo_title: alshin
+project_dir: projects
 
-# URL
-## If your site is put in a subdirectory, set url as 'http://yoursite.com/child' and root as '/child/'
-url: http://blog.alshin.xyz
-root: /
-permalink: passages/:title/
-permalink_defaults:
+# user config
+avatar: avatar.png
 
-# Directory
-source_dir: source
-public_dir: public
-tag_dir: tags
-archive_dir: archives
-category_dir: categories
-code_dir: downloads/code
-i18n_dir: :lang
-skip_render:
+# Utteranc comment system
+comment:
+  repo: yunshang/blog
+
+# sns link：
+sns:
+  github: yunshang
+  juejin: 577e3c792e958a0054aa3b2c
+# page stat
+track:
+  gaid: xxxxxxxxxxxxxx
+
+rss: true
+feed:
+  type: atom
+  path: atom.xml
+  limit: 20
+  hub:
+  content:
+  content_limit: 140
+  content_limit_delim: ' '
+  order_by: -date
+  icon: avatar.png
+  autodiscovery: true
 
 # Writing
 new_post_name: :title.md # File name of new posts
@@ -73,7 +79,7 @@ pagination_dir: page
 # Extensions
 ## Plugins: https://hexo.io/plugins/
 ## Themes: https://hexo.io/themes/
-theme: ad 
+theme: cold-stone
 
 # Deployment
 ## Docs: https://hexo.io/docs/deployment.html

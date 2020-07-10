@@ -1,18 +1,25 @@
-FROM node:alpine
+FROM mhart/alpine-node:12
 
 WORKDIR /hexo
 
 RUN \
-  apk add --no-cache git openssh-client \
+  apk add --no-cache git openssh-client autoconf \ 
+  automake \ 
+  bash g++ libc6-compat libjpeg-turbo-dev libpng-dev \
+  make nasm \
   && npm config set unsafe-perm true \
   && npm install hexo-cli -g \
+  && npm install yarn -g \
+  && npm install gifsicle -g \
+  && npm install pngquant-bin -g \
   && hexo init . \
-  && npm install \
-  && npm install hexo-generator-searchdb --save \
-  && npm install hexo-deployer-git --save \
-  && npm install hexo-tag-bootstrap --save \
-  && npm install hexo-generator-search --save \
-  && npm install hexo-admin --save
+  && yarn install \
+  && yarn add hexo-deployer-git \
+  && yarn add  hexo-wordcount \
+  && yarn add hexo-all-minifier \
+  && yarn add hexo-generator-feed \
+  && yarn add hexo-admin
+  
 
 VOLUME ["/hexo/source", "/hexo/themes", "/root/.ssh"]
 
