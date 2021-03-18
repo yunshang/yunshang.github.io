@@ -55,7 +55,6 @@ end
 
 ### 创建控制器，为客服端提供认证用户的信息。
 
-
 ```ruby
 class ApplicationController < ActionController::Base
   before_action :doorkeeper_authorize!, only: :me
@@ -64,7 +63,7 @@ class ApplicationController < ActionController::Base
     render json: User.find(doorkeeper_token.resource_owner_id).as_json
   end
 end
-``` 
+```
 
 ### doorkeeper_authorize! 检测请求oauth的授权码是否正确,如果错误将渲染401 Unauthorized的请求头。
 
@@ -77,9 +76,6 @@ Rails.application.routes.draw do
 
   get '/me' => 'application#me'
 end
-``` 
+```
 
 ### 客服端应用需要被注册，在 server application平台上。访问http://localhost:3000/oauth/applications/new，注册新应用。你将会跳转到一个认证页面，按照规定要求填写信息后，将会被返回client_id,secret信息。
-
-
-
